@@ -1,50 +1,99 @@
-<nav class="site-header">
-  <a href="/" class="logo">JLog</a>
+---
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
+  { href: "/projects", label: "Projects" },
+  { href: "/about", label: "About" },
+];
+---
 
-  <ul class="nav-links">
-    <li><a href="/">Home</a></li>
-    <li><a href="/blog">Blog</a></li>
-    <li><a href="/projects">Projects</a></li>
-    <li><a href="/about">About</a></li>
-  </ul>
-</nav>
+<header class="site-header">
+  <nav>
+    <a href="/" class="logo">JLog</a>
+    <ul class="nav-links">
+      {
+        navLinks.map((link) => (
+          <li>
+            <a href={link.href}>{link.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+    <button id="theme-toggle" aria-label="Toggle theme">🌓</button>
+  </nav>
+</header>
 
 <style>
   .site-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     padding: 1rem 2rem;
-    background: #fff;
-    border-bottom: 1px solid #eee;
-    position: sticky;
-    top: 0;
-    z-index: 10;
+    display: flex;
+    justify-content: center;
+    background: var(--bg);
+    color: var(--text);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav {
+    width: 100%;
+    max-width: 960px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #0070f3;
+    font-weight: bold;
+    font-size: 1.2rem;
     text-decoration: none;
-    font-family: "Segoe UI", sans-serif;
+    color: var(--text);
   }
 
   .nav-links {
     list-style: none;
     display: flex;
-    gap: 1.5rem;
+    gap: 1.2rem;
     margin: 0;
     padding: 0;
   }
 
   .nav-links a {
     text-decoration: none;
-    color: #333;
-    font-weight: 500;
+    color: var(--text);
+    font-size: 0.95rem;
   }
 
   .nav-links a:hover {
-    color: #0070f3;
+    color: var(--link-color);
+  }
+
+  #theme-toggle {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--text);
   }
 </style>
+
+<script is:inline>
+  const storageKey = "theme";
+  const classNameDark = "dark";
+  const toggle = document.getElementById("theme-toggle");
+
+  const applyTheme = (isDark) => {
+    document.documentElement.classList.toggle(classNameDark, isDark);
+  };
+
+  const savedTheme = localStorage.getItem(storageKey);
+  const systemPrefersDark = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+
+  applyTheme(savedTheme === "dark" || (!savedTheme && systemPrefersDark));
+
+  toggle.addEventListener("click", () => {
+    const isDark = document.documentElement.classList.toggle(classNameDark);
+    localStorage.setItem(storageKey, isDark ? "dark" : "light");
+    toggle.textContent = isDark ? "🌙" : "☀️";
+  });
+</script>

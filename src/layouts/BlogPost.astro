@@ -63,15 +63,38 @@ const { title, pubDate, updatedDate, tags, headings, prev, next } = Astro.props;
 
 <style>
   .toc {
-    background: #f9f9f9;
     padding: 1rem;
-    margin-bottom: 2rem;
-    border-left: 4px solid #0070f3;
+    background: var(--toc-bg);
+    border-left: 3px solid var(--accent);
+    font-size: 0.9rem;
+    border-radius: 6px;
   }
+
   .toc ul {
     list-style: none;
-    padding-left: 0;
+    margin: 0;
+    padding: 0;
   }
+
+  .toc li {
+    margin: 0.4rem 0;
+  }
+
+  .toc a {
+    color: var(--toc-text);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .toc a:hover {
+    color: var(--link-color);
+  }
+
+  .toc a.active {
+    font-weight: bold;
+    color: var(--accent);
+  }
+
   .blog-post {
     max-width: 720px;
     margin: 0 auto;

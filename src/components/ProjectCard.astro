@@ -21,13 +21,14 @@ const { name, description, href, tech = [] } = Astro.props;
 
 <style>
   .card {
-    background: #fff;
-    border: 1px solid #eee;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
     border-radius: 10px;
     padding: 1.25rem;
     transition:
       box-shadow 0.2s ease,
-      transform 0.15s ease;
+      transform 0.15s ease,
+      background 0.3s ease;
   }
 
   .card:hover {
@@ -44,13 +45,13 @@ const { name, description, href, tech = [] } = Astro.props;
   h2 {
     font-size: 1.2rem;
     margin: 0 0 0.5rem;
-    color: #0070f3;
+    color: var(--link-color);
   }
 
   .desc {
     font-size: 0.95rem;
     margin-bottom: 0.75rem;
-    color: #444;
+    color: var(--subtle-text);
   }
 
   .tech-list {
@@ -60,10 +61,10 @@ const { name, description, href, tech = [] } = Astro.props;
   }
 
   .tech {
-    background: #eef2f7;
+    background: var(--tag-bg);
     font-size: 0.75rem;
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
-    color: #333;
+    color: var(--tag-color);
   }
 </style>

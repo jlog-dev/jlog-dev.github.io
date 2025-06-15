@@ -51,35 +51,39 @@ const filteredPosts = posts.filter((post: { data: { tags: unknown[] } }) =>
 
     .post-card {
       display: block;
-      background: white;
-      border: 1px solid #eee;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 1rem;
       transition:
         box-shadow 0.2s ease,
-        border-color 0.2s;
+        border-color 0.2s,
+        background 0.3s ease;
       text-decoration: none;
       color: inherit;
     }
 
     .post-card:hover {
-      border-color: #ccc;
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      border-color: var(--link-color, #0070f3);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     }
 
     .post-card h3 {
       margin: 0 0 0.5rem;
       font-size: 1.2rem;
+      color: var(--text);
     }
 
     .post-card p {
       margin: 0 0 0.75rem;
-      color: #555;
+      color: var(--subtle-text);
+      font-size: 0.95rem;
+      line-height: 1.5;
     }
 
     .post-card time {
       font-size: 0.85rem;
-      color: #999;
+      color: var(--meta-text);
     }
   </style>
 </BaseLayout>

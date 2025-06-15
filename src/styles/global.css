@@ -1,19 +1,76 @@
+/* ============================
+   🌗 Global Styles with Dark Mode
+   ============================ */
+
 /* Reset */
 * {
   box-sizing: border-box;
 }
 
+/* Theme Variables */
+:root {
+  --bg: #ffffff;
+  --text: #222;
+  --heading: #111;
+  --border: #e5e7eb;
+  --link-color: #0070f3;
+  --button-bg: #0070f3;
+  --button-text: #ffffff;
+  --pre-bg: #f4f4f4;
+  --code-text: #111;
+  --toc-bg: #f9f9f9;
+  --toc-text: #333;
+  --accent: #0070f3;
+  --card-bg: #ffffff;
+  --subtle-text: #555;
+  --meta-text: #888;
+  --footer-bg: #fafafa;
+  --icon-color: #555;
+  --avatar-border: #ccc;
+  --tag-bg: #f0f2f4;
+  --tag-hover-bg: #0070f3;
+  --tag-color: #333;
+  --tag-hover-color: #fff;
+}
+
+html.dark {
+  --bg: #121212;
+  --text: #eaeaea;
+  --heading: #ffffff;
+  --card-bg: #1e1e1e;
+  --border: #333;
+  --link-color: #70a8ff;
+  --button-bg: #444;
+  --button-text: #fff;
+  --pre-bg: #1a1a1a;
+  --code-text: #ddd;
+  --toc-bg: #1e1e1e;
+  --toc-text: #ccc;
+  --accent: #70a8ff;
+  --subtle-text: #aaa;
+  --meta-text: #777;
+  --footer-bg: #181818;
+  --icon-color: #aaa;
+  --avatar-border: #444;
+  --tag-bg: #2a2a2a;
+  --tag-hover-bg: #70a8ff;
+  --tag-color: #ddd;
+  --tag-hover-color: #000;
+}
+
+/* Base Styles */
 body {
-  font-family: system-ui, sans-serif;
-  color: #222;
-  background: #fff;
-  line-height: 1.6;
   margin: 0;
   padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, sans-serif;
+  line-height: 1.6;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 a {
-  color: #0070f3;
+  color: var(--link-color);
   text-decoration: none;
 }
 
@@ -25,7 +82,7 @@ h1,
 h2,
 h3 {
   font-weight: bold;
-  color: #111;
+  color: var(--heading);
   margin: 1em 0 0.5em;
 }
 
@@ -41,19 +98,39 @@ p {
 
 button {
   padding: 0.5em 1em;
-  background: #0070f3;
-  color: #fff;
+  background: var(--button-bg);
+  color: var(--button-text);
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 pre {
+  background-color: var(--pre-bg);
   padding: 1rem;
   border-radius: 6px;
   overflow-x: auto;
   font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--code-text);
 }
+
 code {
-  font-family: ui-monospace, monospace;
+  font-family: ui-monospace, SFMono-Regular, monospace;
+  color: inherit;
+}
+
+/* Inline code (not in pre) */
+p code,
+li code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+html.dark p code,
+html.dark li code {
+  background: rgba(255, 255, 255, 0.1);
 }

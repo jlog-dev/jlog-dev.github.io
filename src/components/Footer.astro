@@ -36,34 +36,37 @@
   </div>
 
   <p class="copyright">© 2025 jlog-dev. Powered by Astro.</p>
-
-  <style>
-    .site-footer {
-      text-align: center;
-      padding: 2rem 1rem;
-      background: #fafafa;
-      border-top: 1px solid #eee;
-    }
-
-    .social-icons {
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .social-icons a {
-      color: #555;
-      transition: color 0.2s ease;
-    }
-
-    .social-icons a:hover {
-      color: #0070f3;
-    }
-
-    .copyright {
-      font-size: 0.85rem;
-      color: #888;
-    }
-  </style>
 </footer>
+
+<style>
+  .site-footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    background: var(--footer-bg);
+    border-top: 1px solid var(--border);
+    transition:
+      background 0.3s ease,
+      color 0.3s ease;
+  }
+
+  .social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .social-icons a {
+    color: var(--icon-color);
+    transition: color 0.2s ease;
+  }
+
+  .social-icons a:hover {
+    color: var(--link-color);
+  }
+
+  .copyright {
+    font-size: 0.85rem;
+    color: var(--meta-text);
+  }
+</style>

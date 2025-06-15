@@ -82,28 +82,29 @@ const popularTags = Array.from(tagMap.entries())
       border-radius: 50%;
       object-fit: cover;
       margin-bottom: 1rem;
-      border: 2px solid #ddd;
+      border: 2px solid var(--avatar-border);
     }
 
     h1 {
       font-size: 2rem;
       margin-bottom: 0.5rem;
+      color: var(--text);
     }
 
     .intro {
       font-size: 1.05rem;
-      color: #444;
+      color: var(--subtle-text);
       line-height: 1.6;
       margin-bottom: 1.5rem;
     }
 
     .actions {
       font-size: 0.95rem;
-      color: #555;
+      color: var(--meta-text);
     }
 
     .actions a {
-      color: #0070f3;
+      color: var(--tag-hover-bg);
       text-decoration: none;
     }
 
@@ -120,6 +121,7 @@ const popularTags = Array.from(tagMap.entries())
     .featured-posts h2 {
       font-size: 1.3rem;
       margin-bottom: 1rem;
+      color: var(--text);
     }
 
     .post-grid {
@@ -137,7 +139,7 @@ const popularTags = Array.from(tagMap.entries())
     .popular-tags h2 {
       font-size: 1.2rem;
       margin-bottom: 0.75rem;
-      color: #222;
+      color: var(--text);
     }
 
     .tag-list {
@@ -148,24 +150,26 @@ const popularTags = Array.from(tagMap.entries())
     }
 
     .tag {
-      background: #f0f2f4;
+      background: var(--tag-bg);
       padding: 0.35rem 0.75rem;
       font-size: 0.85rem;
       border-radius: 999px;
       text-decoration: none;
-      color: #333;
-      transition: background 0.2s ease;
+      color: var(--tag-color);
+      transition:
+        background 0.2s ease,
+        color 0.2s ease;
     }
 
     .tag:hover {
-      background: #0070f3;
-      color: white;
+      background: var(--tag-hover-bg);
+      color: var(--tag-hover-color);
     }
 
     .count {
       font-size: 0.75rem;
       margin-left: 0.3rem;
-      color: #777;
+      color: var(--meta-text);
     }
   </style>
 </BaseLayout>

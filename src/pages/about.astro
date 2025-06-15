@@ -70,8 +70,11 @@ const AVATAR_URL = "/avatar.jpg";
       padding: 4rem 1.5rem;
       font-family: system-ui, sans-serif;
       line-height: 1.7;
-      color: #333;
+      color: var(--text);
       text-align: center;
+      transition:
+        color 0.3s ease,
+        background 0.3s ease;
     }
 
     .avatar {
@@ -80,33 +83,37 @@ const AVATAR_URL = "/avatar.jpg";
       border-radius: 50%;
       object-fit: cover;
       margin: 0 auto 1rem;
-      border: 2px solid #ccc;
+      border: 2px solid var(--avatar-border);
     }
 
     h1 {
       font-size: 2rem;
       margin-bottom: 2rem;
+      color: var(--heading);
     }
 
     .intro {
       font-size: 1.1rem;
-      color: #444;
+      color: var(--subtle-text);
       margin-bottom: 3rem;
     }
 
     .section {
-      background: #f9f9f9;
+      background: var(--card-bg);
       padding: 1.5rem;
       border-radius: 8px;
       margin-bottom: 2rem;
-      border: 1px solid #eee;
+      border: 1px solid var(--border);
       text-align: left;
+      transition:
+        background 0.3s ease,
+        border 0.3s ease;
     }
 
     .section h2 {
       font-size: 1.4rem;
       margin-bottom: 1rem;
-      color: #222;
+      color: var(--heading);
     }
 
     .section ul {
@@ -125,7 +132,7 @@ const AVATAR_URL = "/avatar.jpg";
     }
 
     a {
-      color: #0070f3;
+      color: var(--link-color);
       text-decoration: none;
     }
 
