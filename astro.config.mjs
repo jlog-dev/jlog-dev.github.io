@@ -9,10 +9,5 @@ export default defineConfig({
     syntaxHighlight: "shiki",
     shikiConfig: { theme: "github-dark" },
   },
-  integrations: [
-    mdx(),
-    sitemap({
-      sitemapIndexFile: "/sitemap.xml",
-    }),
-  ],
+  integrations: [mdx(), sitemap()],
 });
