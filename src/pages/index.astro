@@ -1,78 +1,171 @@
 ---
+import { getCollection } from "astro:content";
+import BlogCard from "../components/BlogCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const posts = await getCollection("blog");
+const featuredPosts = posts.filter((p) => p.data.featured);
+const tagMap = new Map();
+
+for (const post of posts) {
+  post.data.tags?.forEach((tag: any) => {
+    tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
+  });
+}
+
+const popularTags = Array.from(tagMap.entries())
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 5);
 ---
 
 <BaseLayout title="Home">
   <section class="hero">
     <img src="/avatar.jpg" alt="Jing Li Avatar" class="avatar" />
-    <h1>👋 Hi, I’m Jing Li</h1>
-    <p>
-      Welcome to <strong>JLog</strong> — my digital logbook of <em>code</em>, <em
-        >ideas</em
-      >, and <em>things I build</em>.
+    <h1>Hi, I’m <strong>Jing Li</strong> 👋</h1>
+    <p class="intro">
+      Welcome to <strong>JLog</strong> — my digital logbook where I share<br />
+      what I <em>build</em>, what I <em>learn</em>, and what I <em>think</em>.
+    </p>
+
+    <p class="actions">
+      → <a href="/blog">Read the blog</a> ・
+      <a href="/projects">See my projects</a> ・
+      <a href="/about">About me</a>
     </p>
   </section>
 
-  <section class="quick-links">
-    <a href="/blog" class="card">📚 Latest Posts</a>
-    <a href="/projects" class="card">🛠 Projects</a>
-    <a href="/about" class="card">🙋 About Me</a>
-    <a href="/links" class="card">🔗 Connect</a>
+  <section class="popular-tags">
+    <h2>Popular Tags</h2>
+    <div class="tag-list">
+      {
+        popularTags.map(([tag, count]) => (
+          <a href={`/tags/${tag}`} class="tag">
+            {tag} <span class="count">({count})</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="featured-posts">
+    <h2>✨ Featured Posts</h2>
+    <div class="post-grid">
+      {
+        featuredPosts.map(
+          (post: {
+            data: { title: string; description: string; pubDate: string };
+            slug: string;
+          }) => (
+            <BlogCard
+              title={post.data.title}
+              description={post.data.description}
+              date={post.data.pubDate}
+              href={`/blog/${post.slug}`}
+            />
+          )
+        )
+      }
+    </div>
   </section>
 
   <style>
     .hero {
       text-align: center;
-      padding: 3rem 1rem 2rem;
-      max-width: 640px;
+      padding: 4rem 1rem 2rem;
+      max-width: 720px;
       margin: 0 auto;
     }
 
-    .hero .avatar {
-      width: 96px;
-      height: 96px;
+    .avatar {
+      width: 88px;
+      height: 88px;
       border-radius: 50%;
       object-fit: cover;
       margin-bottom: 1rem;
       border: 2px solid #ddd;
     }
 
-    .hero h1 {
+    h1 {
       font-size: 2rem;
-      margin: 0.5rem 0 1rem;
+      margin-bottom: 0.5rem;
     }
 
-    .hero p {
-      font-size: 1.1rem;
-      color: #444;
-    }
-
-    .quick-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      padding: 2rem 1rem 4rem;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-
-    .card {
-      display: block;
-      background: #f9f9f9;
-      border: 1px solid #eee;
-      border-radius: 8px;
-      padding: 1.2rem;
-      text-align: center;
-      text-decoration: none;
+    .intro {
       font-size: 1.05rem;
-      transition: all 0.2s ease;
-      color: #333;
+      color: #444;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
     }
 
-    .card:hover {
-      background: #eef4ff;
-      border-color: #ccd;
+    .actions {
+      font-size: 0.95rem;
+      color: #555;
+    }
+
+    .actions a {
       color: #0070f3;
+      text-decoration: none;
+    }
+
+    .actions a:hover {
+      text-decoration: underline;
+    }
+
+    .featured-posts {
+      max-width: 720px;
+      margin: 3rem auto 4rem;
+      padding: 0 1rem;
+    }
+
+    .featured-posts h2 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+
+    .post-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .popular-tags {
+      max-width: 720px;
+      margin: 3rem auto 4rem;
+      padding: 0 1rem;
+      text-align: center;
+    }
+
+    .popular-tags h2 {
+      font-size: 1.2rem;
+      margin-bottom: 0.75rem;
+      color: #222;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .tag {
+      background: #f0f2f4;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+      border-radius: 999px;
+      text-decoration: none;
+      color: #333;
+      transition: background 0.2s ease;
+    }
+
+    .tag:hover {
+      background: #0070f3;
+      color: white;
+    }
+
+    .count {
+      font-size: 0.75rem;
+      margin-left: 0.3rem;
+      color: #777;
     }
   </style>
 </BaseLayout>
