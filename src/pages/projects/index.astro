@@ -1,0 +1,23 @@
+---
+import { getCollection } from "astro:content";
+import ProjectCard from "../../components/ProjectCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+type Project = { data: { title: string; description: string }; slug: string };
+const projects = (await getCollection("projects")) as Project[];
+---
+
+<BaseLayout title="Projects">
+  <h1 class="page-title">🛠 Projects</h1>
+  <div class="project-grid">
+    {
+      projects.map(({ data, slug }) => (
+        <ProjectCard
+          name={data.title}
+          description={data.description}
+          href={`/projects/${slug}`}
+        />
+      ))
+    }
+  </div>
+</BaseLayout>
