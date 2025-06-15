@@ -1,4 +1,3 @@
-import markdownRemark from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
@@ -6,12 +5,9 @@ import { defineConfig } from "astro/config";
 export default defineConfig({
   site: "https://jlog-dev.github.io",
   base: "/",
-  integrations: [
-    mdx(),
-    sitemap(),
-    markdownRemark({
-      syntaxHighlight: "shiki",
-      shikiConfig: { theme: "github-dark" },
-    }),
-  ],
+  markdown: {
+    syntaxHighlight: "shiki",
+    shikiConfig: { theme: "github-dark" },
+  },
+  integrations: [mdx(), sitemap()],
 });
