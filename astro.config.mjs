@@ -1,4 +1,4 @@
-import remarkPlugin from "@astrojs/markdown-remark";
+import markdownRemark from "@astrojs/markdown-remark";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
@@ -9,11 +9,9 @@ export default defineConfig({
   integrations: [
     mdx(),
     sitemap(),
-    remarkPlugin({
+    markdownRemark({
       syntaxHighlight: "shiki",
-      shikiConfig: {
-        theme: "github-dark",
-      },
+      shikiConfig: { theme: "github-dark" },
     }),
   ],
 });
