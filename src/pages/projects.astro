@@ -1,0 +1,57 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProjectCard from "../layouts/ProjectCard.astro";
+import { GITHUB_REPO } from "../utils/consts";
+
+const projects = [
+  {
+    name: "My Frontend Learning Notes",
+    repoName: "frontend-bootcamp",
+    description: "A curated guide for learning modern frontend skills.",
+  },
+  {
+    name: "Project Two",
+    repoName: "project-two",
+    description: "An experimental tool for data visualization.",
+  },
+  {
+    name: "Project Three",
+    repoName: "project-three",
+    description: "Personal productivity CLI app written in TypeScript.",
+  },
+];
+---
+
+<BaseLayout title="Projects">
+  <h1 class="page-title">🛠 My Projects</h1>
+
+  <section class="project-grid">
+    {
+      projects.map((project) => (
+        <ProjectCard
+          name={project.name}
+          description={project.description}
+          href={`${GITHUB_REPO}/${project.repoName}`}
+        />
+      ))
+    }
+  </section>
+
+  <style>
+    .page-title {
+      text-align: center;
+      font-size: 2rem;
+      margin: 2.5rem 0 1.5rem;
+      color: #222;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+    }
+  </style>
+</BaseLayout>

@@ -1,0 +1,31 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const posts = await getCollection("blog");
+
+const tagMap = new Map();
+
+posts.forEach((post: { data: { tags: any[] } }) => {
+  post.data.tags?.forEach((tag: any) => {
+    if (!tagMap.has(tag)) tagMap.set(tag, []);
+    tagMap.get(tag).push(post);
+  });
+});
+---
+
+<BaseLayout title="All Tags">
+  <h1>🏷 All Tags</h1>
+
+  <ul>
+    {
+      [...tagMap.entries()].map(([tag, items]) => (
+        <li>
+          <a href={`/tags/${tag}`}>
+            {tag} ({items.length})
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

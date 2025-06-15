@@ -1,0 +1,12 @@
+---
+import styles from "./BlogCard.module.css";
+const { title, description, date, href } = Astro.props;
+---
+
+<article class={styles.card}>
+  <a href={href} class={styles.link}>
+    <h2>{title}</h2>
+    <p>{description}</p>
+    <time>{date}</time>
+  </a>
+</article>

@@ -1,0 +1,35 @@
+---
+import { getCollection } from "astro:content";
+import BlogCard from "../../components/BlogCard.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const posts = await getCollection("blog");
+---
+
+<BaseLayout title="Blog">
+  <h1 class="page-title">📚 Blog</h1>
+  <div style="max-width: 720px; margin: 0 auto; padding: 0 1rem">
+    {
+      posts
+        .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+        .map((post) => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.pubDate.toDateString()}
+            href={`/blog/${post.slug}`}
+          />
+        ))
+    }
+  </div>
+</BaseLayout>
+
+<style>
+  .page-title {
+    text-align: center;
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 2rem 0 1.5rem;
+    color: #222;
+  }
+</style>

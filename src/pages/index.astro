@@ -1,16 +1,122 @@
 ---
-
+import BaseLayout from "../layouts/BaseLayout.astro";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout title="Welcome to JLog">
+  <section class="hero">
+    <h1>👋 Welcome to <span class="brand">JLog</span></h1>
+    <p>
+      Hi, I'm <strong>Jing Li</strong> – a developer who writes.
+    </p>
+    <p>
+      <span class="brand">JLog</span> is my digital logbook where I share what I
+      <strong>build</strong>, what I <strong>learn</strong>, and what I <strong
+        >think</strong
+      > — across programming, AI tools, and the craft of writing.
+    </p>
+  </section>
+
+  <section class="nav-links">
+    <a href="/blog" class="nav-card">📚 Latest Blog Posts →</a>
+    <a href="/projects" class="nav-card">🛠 Projects I'm Building →</a>
+    <a href="/about" class="nav-card">🙋‍♂️ About Me →</a>
+  </section>
+
+  <section class="topics-block">
+    <h2>🗂 Explore by Topic</h2>
+    <div class="topic-cards">
+      <a href="/tags/technical" class="topic-card">💻 Technical</a>
+      <a href="/tags/projects" class="topic-card">🛠 Projects</a>
+      <a href="/tags/writing" class="topic-card">✍️ Writing</a>
+      <a href="/tags/thoughts" class="topic-card">🧠 Thoughts</a>
+    </div>
+  </section>
+
+  <style>
+    .hero {
+      max-width: 720px;
+      margin: 4rem auto 2rem;
+      text-align: center;
+      padding: 0 1rem;
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .brand {
+      color: #0070f3;
+      font-weight: 700;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+      color: #444;
+      margin-bottom: 1rem;
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-top: 2rem;
+      padding: 0 1rem;
+    }
+
+    .nav-card {
+      background: #f9f9f9;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      border: 1px solid #eee;
+      text-decoration: none;
+      color: #333;
+      font-size: 1.05rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-card:hover {
+      background: #f0f4ff;
+      border-color: #cce;
+      color: #0070f3;
+    }
+
+    .topics-block {
+      max-width: 720px;
+      margin: 3rem auto 2rem;
+      padding: 0 1rem;
+      text-align: center;
+    }
+
+    .topics-block h2 {
+      font-size: 1.6rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .topic-cards {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .topic-card {
+      padding: 0.8rem 1.2rem;
+      border-radius: 6px;
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      text-decoration: none;
+      font-size: 1rem;
+      color: #333;
+      transition: all 0.2s ease;
+    }
+
+    .topic-card:hover {
+      background: #e0ecff;
+      color: #0366d6;
+      border-color: #bfdfff;
+    }
+  </style>
+</BaseLayout>

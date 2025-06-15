@@ -1,0 +1,85 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+
+  const tagSet = new Set();
+
+  posts.forEach((post: { data: { tags: any[] } }) => {
+    post.data.tags?.forEach((tag) => tagSet.add(tag));
+  });
+
+  return Array.from(tagSet).map((tag) => ({
+    params: { tag },
+  }));
+}
+
+// 👇 Actual rendering
+const { tag } = Astro.params;
+const posts = await getCollection("blog");
+const filteredPosts = posts.filter((post: { data: { tags: unknown[] } }) =>
+  post.data.tags?.includes(tag)
+);
+---
+
+<BaseLayout title={`Posts tagged "${tag}"`}>
+  <h1>🧩 Tag: {tag}</h1>
+
+  {filteredPosts.length === 0 && <p>No posts found.</p>}
+
+  <div class="post-grid">
+    {
+      filteredPosts.map((post) => (
+        <a href={`/blog/${post.slug}`} class="post-card">
+          <h3>{post.data.title}</h3>
+          <p>{post.data.description ?? "No description."}</p>
+          <time>{post.data.pubDate.toDateString()}</time>
+        </a>
+      ))
+    }
+  </div>
+
+  <style>
+    .post-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .post-card {
+      display: block;
+      background: white;
+      border: 1px solid #eee;
+      border-radius: 8px;
+      padding: 1rem;
+      transition:
+        box-shadow 0.2s ease,
+        border-color 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .post-card:hover {
+      border-color: #ccc;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .post-card h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .post-card p {
+      margin: 0 0 0.75rem;
+      color: #555;
+    }
+
+    .post-card time {
+      font-size: 0.85rem;
+      color: #999;
+    }
+  </style>
+</BaseLayout>
