@@ -11,18 +11,87 @@ import {
   getAllTILPosts 
 } from "../utils/content";
 
-// Get featured content from all collections
-const featuredPosts = await getFeaturedBlogPosts(3);
-const featuredProjects = await getFeaturedProjects(2);
-const recentSnippets = await getAllSnippets();
-const recentTIL = await getAllTILPosts();
+// Get all content for activity timeline
+const blogPosts = await getCollection("blog");
+const projects = await getCollection("projects");
+const snippets = await getCollection("snippets");
+const tilPosts = await getCollection("til");
+const bookmarks = await getCollection("bookmarks");
+
+// Create unified activity timeline
+const allActivities = [
+  ...blogPosts.map(post => ({
+    type: 'blog',
+    icon: '📝',
+    title: post.data.title,
+    description: post.data.description,
+    date: post.data.pubDate,
+    slug: post.slug,
+    href: `/blog/${post.slug}`,
+    category: post.slug.split('/')[0] || 'general'
+  })),
+  ...projects.map(project => ({
+    type: 'project',
+    icon: '🚀',
+    title: project.data.title,
+    description: project.data.description,
+    date: project.data.pubDate,
+    slug: project.slug,
+    href: `/projects/${project.slug}`,
+    status: project.data.status
+  })),
+  ...snippets.map(snippet => ({
+    type: 'snippet',
+    icon: '⚡',
+    title: snippet.data.title,
+    description: snippet.data.description,
+    date: snippet.data.pubDate,
+    slug: snippet.slug,
+    href: `/snippets/${snippet.slug}`,
+    language: snippet.data.language
+  })),
+  ...tilPosts.map(til => ({
+    type: 'til',
+    icon: '💡',
+    title: til.data.title,
+    description: til.data.description,
+    date: til.data.pubDate,
+    slug: til.slug,
+    href: `/til/${til.slug}`,
+    category: til.data.category
+  })),
+  ...bookmarks.map(bookmark => ({
+    type: 'bookmark',
+    icon: '🔖',
+    title: bookmark.data.title,
+    description: bookmark.data.description,
+    date: bookmark.data.pubDate,
+    slug: bookmark.slug,
+    href: `/bookmarks/${bookmark.slug}`,
+    rating: bookmark.data.rating
+  }))
+];
+
+// Sort by date (most recent first) and get recent activities
+const recentActivities = allActivities
+  .sort((a, b) => b.date.getTime() - a.date.getTime())
+  .slice(0, 8);
+
+// Get content stats
 const contentStats = await getContentStats();
 const popularTags = await getAllTags();
-
-// Limit recent content
-const latestSnippets = recentSnippets.slice(0, 2);
-const latestTIL = recentTIL.slice(0, 2);
 const topTags = popularTags.slice(0, 8);
+
+// Calculate activity stats
+const thisWeekStart = new Date();
+thisWeekStart.setDate(thisWeekStart.getDate() - 7);
+const thisWeekActivities = allActivities.filter(activity => activity.date >= thisWeekStart);
+const thisMonthStart = new Date();
+thisMonthStart.setMonth(thisMonthStart.getMonth() - 1);
+const thisMonthActivities = allActivities.filter(activity => activity.date >= thisMonthStart);
+
+// Current focus (most recent blog post or project)
+const currentFocus = recentActivities[0];
 ---
 
 <BaseLayout title="Home">
@@ -42,118 +111,93 @@ const topTags = popularTags.slice(0, 8);
     </p>
   </section>
 
-  <!-- Content Stats -->
-  <section class="content-stats">
+  <!-- Current Focus -->
+  {currentFocus && (
+    <section class="current-focus">
+      <h2>🎯 Currently Working On</h2>
+      <div class="focus-card">
+        <div class="focus-header">
+          <span class="focus-icon">{currentFocus.icon}</span>
+          <div class="focus-status">
+            <span class="status-indicator active"></span>
+            <span class="status-text">Recent Activity</span>
+          </div>
+        </div>
+        <h3><a href={currentFocus.href}>{currentFocus.title}</a></h3>
+        <p>{currentFocus.description}</p>
+        <div class="focus-meta">
+          <span class="activity-date">{currentFocus.date.toLocaleDateString()}</span>
+          <span class="activity-type">{currentFocus.type}</span>
+          {(currentFocus as any).category && <span class="activity-category">{(currentFocus as any).category}</span>}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <!-- Activity Stats -->
+  <section class="activity-stats">
+    <h2>📊 Activity Overview</h2>
     <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">{allActivities.length}</span>
+        <span class="stat-label">Total Activities</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{thisWeekActivities.length}</span>
+        <span class="stat-label">This Week</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{thisMonthActivities.length}</span>
+        <span class="stat-label">This Month</span>
+      </div>
       <div class="stat-item">
         <span class="stat-number">{contentStats.blogPosts}</span>
         <span class="stat-label">Blog Posts</span>
       </div>
-      <div class="stat-item">
-        <span class="stat-number">{contentStats.projects}</span>
-        <span class="stat-label">Projects</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">{contentStats.snippets}</span>
-        <span class="stat-label">Code Snippets</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">{contentStats.tilPosts}</span>
-        <span class="stat-label">TIL Posts</span>
-      </div>
     </div>
   </section>
 
+  <!-- Activity Timeline -->
+  <section class="activity-timeline">
+    <h2>🔄 Recent Activity</h2>
+    <div class="timeline">
+      {recentActivities.map((activity) => (
+        <div class={`activity-item ${activity.type}`}>
+          <div class="activity-icon">{activity.icon}</div>
+          <div class="activity-content">
+            <div class="activity-header">
+              <span class="activity-type">{activity.type}</span>
+              <time class="activity-date">{activity.date.toLocaleDateString()}</time>
+            </div>
+            <h3><a href={activity.href}>{activity.title}</a></h3>
+            <p>{activity.description}</p>
+            <div class="activity-meta">
+              {(activity as any).category && <span class="meta-tag">{(activity as any).category}</span>}
+              {(activity as any).language && <span class="meta-tag">{(activity as any).language}</span>}
+              {(activity as any).status && <span class="meta-tag">{(activity as any).status}</span>}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Popular Tags -->
   <section class="popular-tags">
-    <h2>Popular Tags</h2>
+    <h2>🏷️ Popular Topics</h2>
     <div class="tag-list">
-      {
-        topTags.map((tag) => (
-          <a href={`/tags/${tag}`} class="tag">
-            {tag}
-          </a>
-        ))
-      }
+      {topTags.map((tag) => (
+        <a href={`/tags/${tag}`} class="tag">
+          {tag}
+        </a>
+      ))}
     </div>
   </section>
-
-  <section class="featured-posts">
-    <h2>✨ Featured Posts</h2>
-    <div class="post-grid">
-      {
-        featuredPosts.map((post) => (
-          <BlogCard
-            title={post.data.title}
-            description={post.data.description}
-            date={post.data.pubDate}
-            href={`/blog/${post.slug}`}
-          />
-        ))
-      }
-    </div>
-  </section>
-
-  <!-- Recent Snippets -->
-  {latestSnippets.length > 0 && (
-    <section class="recent-content">
-      <h2>🔧 Latest Code Snippets</h2>
-      <div class="content-grid">
-        {latestSnippets.map((snippet) => (
-          <div class="content-card">
-            <h3><a href={`/snippets/${snippet.slug}`}>{snippet.data.title}</a></h3>
-            <p>{snippet.data.description}</p>
-            <div class="content-meta">
-              <span class="language">{snippet.data.language}</span>
-              <span class="difficulty">{snippet.data.difficulty}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  )}
-
-  <!-- Recent TIL -->
-  {latestTIL.length > 0 && (
-    <section class="recent-content">
-      <h2>💡 Today I Learned</h2>
-      <div class="content-grid">
-        {latestTIL.map((til) => (
-          <div class="content-card">
-            <h3><a href={`/til/${til.slug}`}>{til.data.title}</a></h3>
-            <p>{til.data.description}</p>
-            <div class="content-meta">
-              <span class="category">{til.data.category}</span>
-              <span class="difficulty">{til.data.difficulty}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  )}
-
-  <!-- Featured Projects -->
-  {featuredProjects.length > 0 && (
-    <section class="recent-content">
-      <h2>🚀 Featured Projects</h2>
-      <div class="content-grid">
-        {featuredProjects.map((project) => (
-          <div class="content-card">
-            <h3><a href={`/projects/${project.slug}`}>{project.data.title}</a></h3>
-            <p>{project.data.description}</p>
-            <div class="content-meta">
-              <span class="tech">{project.data.tech.slice(0, 2).join(', ')}</span>
-              <span class="status">{project.data.status}</span>
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  )}
 
   <style>
     .hero {
       text-align: center;
-      padding: 4rem 1rem 2rem;
+      padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-xl);
       max-width: 720px;
       margin: 0 auto;
     }
@@ -163,116 +207,162 @@ const topTags = popularTags.slice(0, 8);
       height: 88px;
       border-radius: 50%;
       object-fit: cover;
-      margin-bottom: 1rem;
-      border: 2px solid var(--avatar-border);
+      margin-bottom: var(--spacing-md);
+      border: 2px solid var(--border-primary);
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-      color: var(--text);
+      font-size: var(--font-size-2xl);
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-primary);
     }
 
     .intro {
-      font-size: 1.05rem;
-      color: var(--subtle-text);
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
+      font-size: var(--font-size-lg);
+      color: var(--text-secondary);
+      line-height: var(--line-height-relaxed);
+      margin-bottom: var(--spacing-lg);
     }
 
     .actions {
-      font-size: 0.95rem;
-      color: var(--meta-text);
+      font-size: var(--font-size-base);
+      color: var(--text-tertiary);
     }
 
     .actions a {
-      color: var(--tag-hover-bg);
+      color: var(--color-link);
       text-decoration: none;
     }
 
     .actions a:hover {
+      color: var(--color-link-hover);
       text-decoration: underline;
     }
 
-    .featured-posts {
+    /* Current Focus */
+    .current-focus {
       max-width: 720px;
-      margin: 3rem auto 4rem;
-      padding: 0 1rem;
+      margin: var(--spacing-2xl) auto;
+      padding: 0 var(--spacing-md);
     }
 
-    .featured-posts h2 {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
-      color: var(--text);
+    .current-focus h2 {
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--spacing-md);
+      color: var(--text-primary);
     }
 
-    .post-grid {
-      display: grid;
-      gap: 1rem;
+    .focus-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      transition: transform var(--transition-base), box-shadow var(--transition-base);
     }
 
-    .popular-tags {
-      max-width: 720px;
-      margin: 3rem auto 4rem;
-      padding: 0 1rem;
-      text-align: center;
+    .focus-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
     }
 
-    .popular-tags h2 {
-      font-size: 1.2rem;
-      margin-bottom: 0.75rem;
-      color: var(--text);
-    }
-
-    .tag-list {
+    .focus-header {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.6rem;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: var(--spacing-md);
     }
 
-    .tag {
-      background: var(--tag-bg);
-      padding: 0.35rem 0.75rem;
-      font-size: 0.85rem;
-      border-radius: 999px;
+    .focus-icon {
+      font-size: var(--font-size-xl);
+    }
+
+    .focus-status {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--color-success);
+    }
+
+    .status-indicator.active {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .status-text {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+    }
+
+    .focus-card h3 {
+      margin: 0 0 var(--spacing-sm) 0;
+      font-size: var(--font-size-lg);
+    }
+
+    .focus-card h3 a {
+      color: var(--text-primary);
       text-decoration: none;
-      color: var(--tag-color);
-      transition:
-        background 0.2s ease,
-        color 0.2s ease;
     }
 
-    .tag:hover {
-      background: var(--tag-hover-bg);
-      color: var(--tag-hover-color);
+    .focus-card h3 a:hover {
+      color: var(--color-accent);
     }
 
-    .count {
-      font-size: 0.75rem;
-      margin-left: 0.3rem;
-      color: var(--meta-text);
+    .focus-card p {
+      color: var(--text-secondary);
+      line-height: var(--line-height-relaxed);
+      margin-bottom: var(--spacing-md);
     }
 
-    /* Content Stats */
-    .content-stats {
+    .focus-meta {
+      display: flex;
+      gap: var(--spacing-sm);
+      flex-wrap: wrap;
+    }
+
+    .focus-meta span {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
+    }
+
+    /* Activity Stats */
+    .activity-stats {
       max-width: 720px;
-      margin: 2rem auto;
-      padding: 0 1rem;
+      margin: var(--spacing-2xl) auto;
+      padding: 0 var(--spacing-md);
+    }
+
+    .activity-stats h2 {
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--spacing-md);
+      color: var(--text-primary);
     }
 
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: 1rem;
+      gap: var(--spacing-md);
       text-align: center;
     }
 
     .stat-item {
-      background: var(--bg-secondary);
-      padding: 1.5rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      padding: var(--spacing-lg) var(--spacing-md);
       border-radius: var(--radius-md);
-      transition: transform 0.2s ease;
+      transition: transform var(--transition-base);
     }
 
     .stat-item:hover {
@@ -281,99 +371,198 @@ const topTags = popularTags.slice(0, 8);
 
     .stat-number {
       display: block;
-      font-size: 2rem;
-      font-weight: bold;
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
       color: var(--color-accent);
       line-height: 1;
     }
 
     .stat-label {
       display: block;
-      font-size: 0.85rem;
+      font-size: var(--font-size-sm);
       color: var(--text-secondary);
-      margin-top: 0.5rem;
+      margin-top: var(--spacing-xs);
     }
 
-    /* Recent Content Sections */
-    .recent-content {
+    /* Activity Timeline */
+    .activity-timeline {
       max-width: 720px;
-      margin: 3rem auto;
-      padding: 0 1rem;
+      margin: var(--spacing-2xl) auto;
+      padding: 0 var(--spacing-md);
     }
 
-    .recent-content h2 {
-      font-size: 1.3rem;
-      margin-bottom: 1rem;
+    .activity-timeline h2 {
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--spacing-lg);
       color: var(--text-primary);
     }
 
-    .content-grid {
-      display: grid;
-      gap: 1rem;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    .timeline {
+      position: relative;
     }
 
-    .content-card {
-      background: var(--bg-secondary);
-      padding: 1.5rem;
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 20px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border-primary);
+    }
+
+    .activity-item {
+      position: relative;
+      display: flex;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+      padding-left: var(--spacing-xs);
+    }
+
+    .activity-icon {
+      flex-shrink: 0;
+      width: 40px;
+      height: 40px;
+      background: var(--bg-card);
+      border: 2px solid var(--border-primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: var(--font-size-lg);
+      position: relative;
+      z-index: 1;
+    }
+
+    .activity-content {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
       border-radius: var(--radius-md);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      padding: var(--spacing-md);
+      transition: transform var(--transition-base);
     }
 
-    .content-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    .activity-content:hover {
+      transform: translateY(-1px);
     }
 
-    .content-card h3 {
-      margin: 0 0 0.5rem 0;
-      font-size: 1.1rem;
+    .activity-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-xs);
     }
 
-    .content-card h3 a {
+    .activity-type {
+      background: var(--color-accent);
+      color: white;
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--radius-sm);
+      font-size: var(--font-size-xs);
+      text-transform: capitalize;
+    }
+
+    .activity-date {
+      font-size: var(--font-size-xs);
+      color: var(--text-tertiary);
+    }
+
+    .activity-content h3 {
+      margin: 0 0 var(--spacing-xs) 0;
+      font-size: var(--font-size-base);
+    }
+
+    .activity-content h3 a {
       color: var(--text-primary);
       text-decoration: none;
     }
 
-    .content-card h3 a:hover {
+    .activity-content h3 a:hover {
       color: var(--color-accent);
     }
 
-    .content-card p {
+    .activity-content p {
       color: var(--text-secondary);
-      font-size: 0.9rem;
-      line-height: 1.5;
-      margin-bottom: 1rem;
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-relaxed);
+      margin-bottom: var(--spacing-sm);
     }
 
-    .content-meta {
+    .activity-meta {
       display: flex;
-      gap: 0.5rem;
+      gap: var(--spacing-xs);
       flex-wrap: wrap;
     }
 
-    .content-meta span {
-      background: var(--tag-bg);
-      color: var(--tag-color);
-      padding: 0.25rem 0.5rem;
+    .meta-tag {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      padding: var(--spacing-xs) var(--spacing-sm);
       border-radius: var(--radius-sm);
-      font-size: 0.75rem;
+      font-size: var(--font-size-xs);
       text-transform: capitalize;
     }
 
-    .language {
-      background: var(--color-accent) !important;
-      color: white !important;
+    /* Popular Tags */
+    .popular-tags {
+      max-width: 720px;
+      margin: var(--spacing-2xl) auto;
+      padding: 0 var(--spacing-md);
+      text-align: center;
     }
 
-    .difficulty {
-      background: var(--color-warning) !important;
-      color: white !important;
+    .popular-tags h2 {
+      font-size: var(--font-size-xl);
+      margin-bottom: var(--spacing-md);
+      color: var(--text-primary);
     }
 
-    .status {
-      background: var(--color-success) !important;
-      color: white !important;
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: var(--spacing-sm);
+    }
+
+    .tag {
+      background: var(--bg-secondary);
+      padding: var(--spacing-xs) var(--spacing-md);
+      font-size: var(--font-size-sm);
+      border-radius: var(--radius-full);
+      text-decoration: none;
+      color: var(--text-secondary);
+      border: 1px solid var(--border-primary);
+      transition: all var(--transition-base);
+    }
+
+    .tag:hover {
+      background: var(--color-accent);
+      color: white;
+      border-color: var(--color-accent);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .timeline::before {
+        left: 15px;
+      }
+      
+      .activity-icon {
+        width: 30px;
+        height: 30px;
+        font-size: var(--font-size-base);
+      }
+      
+      .activity-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--spacing-xs);
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
   </style>
 </BaseLayout>
