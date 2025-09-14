@@ -1,18 +1,42 @@
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-primary);
+  background: rgba(22, 33, 62, 0.8);
+  border: 2px solid var(--border-primary);
   border-radius: var(--radius-xl);
   padding: var(--spacing-md) var(--spacing-lg);
   margin-bottom: var(--spacing-lg);
   transition: 
     box-shadow var(--transition-base), 
     border-color var(--transition-base), 
-    background var(--transition-slow);
+    background var(--transition-slow),
+    transform var(--transition-base);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 .card:hover {
-  border-color: var(--color-link);
-  box-shadow: var(--shadow-md);
+  border-color: var(--color-neon-pink);
+  box-shadow: var(--shadow-glow-pink);
+  transform: translateY(-4px);
+  background: rgba(26, 26, 46, 0.9);
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--bg-gradient);
+  transform: scaleX(0);
+  transition: transform var(--transition-base);
+  box-shadow: 0 0 10px var(--color-neon-cyan);
+}
+
+.card:hover::before {
+  transform: scaleX(1);
 }
 
 .link {
@@ -26,6 +50,15 @@ h2 {
   font-size: var(--font-size-xl);
   color: var(--text-primary);
   font-weight: var(--font-weight-medium);
+  font-family: var(--font-family-display);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  transition: all var(--transition-base);
+}
+
+.card:hover h2 {
+  color: var(--color-neon-cyan);
+  text-shadow: 0 0 5px var(--color-neon-cyan);
 }
 
 p {
@@ -38,4 +71,20 @@ p {
 time {
   font-size: var(--font-size-xs);
   color: var(--text-meta);
+  font-family: var(--font-family-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(0, 245, 255, 0.1);
+  border: 1px solid var(--color-neon-cyan);
+  border-radius: var(--radius-sm);
+  display: inline-block;
+  transition: all var(--transition-base);
+}
+
+.card:hover time {
+  background: rgba(255, 0, 255, 0.1);
+  border-color: var(--color-neon-pink);
+  color: var(--color-neon-pink);
+  box-shadow: 0 0 5px var(--color-neon-pink);
 }

@@ -22,73 +22,73 @@ const currentActivity = recentBlogPosts[0];
 ---
 
 <BaseLayout title="Home">
-  <div class="integrated-layout">
-    <!-- Header Integration with Profile -->
-    <header class="integrated-header">
-      <div class="header-content">
-        <!-- Left: Profile Info -->
-        <div class="profile-section">
-          <img src="/avatar.jpg" alt="Jing Li Avatar" class="avatar" />
-          <div class="profile-info">
-            <h1>Jing Li</h1>
-            <p class="bio">Building, learning, and sharing through code</p>
-          </div>
-        </div>
-        
-        <!-- Right: Stats and Actions -->
-        <div class="header-actions">
-          <div class="stats-row">
-            <div class="stat">
-              <span class="number">{contentStats.blogPosts}</span>
-              <span class="label">Posts</span>
-            </div>
-            <div class="stat">
-              <span class="number">{contentStats.projects}</span>
-              <span class="label">Projects</span>
-            </div>
-            <div class="stat">
-              <span class="number">{contentStats.snippets}</span>
-              <span class="label">Snippets</span>
+  <div class="fullscreen-layout">
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="integrated-header">
+        <div class="header-content">
+          <!-- Left: Profile Info -->
+          <div class="profile-section">
+            <img src="/avatar.jpg" alt="Jing Li Avatar" class="avatar" />
+            <div class="profile-info">
+              <h1>Jing Li</h1>
+              <p class="bio">Building, learning, and sharing through code</p>
             </div>
           </div>
-          <div class="contact-actions">
-            <a href="https://github.com/jlog-dev" target="_blank" class="action-btn">
-              <span class="icon">🔗</span> GitHub
-            </a>
-            <a href="mailto:you@example.com" class="action-btn">
-              <span class="icon">✉️</span> Email
-            </a>
+          
+          <!-- Right: Stats and Actions -->
+          <div class="header-actions">
+            <div class="stats-row">
+              <div class="stat">
+                <span class="number">{contentStats.blogPosts}</span>
+                <span class="label">Posts</span>
+              </div>
+              <div class="stat">
+                <span class="number">{contentStats.projects}</span>
+                <span class="label">Projects</span>
+              </div>
+              <div class="stat">
+                <span class="number">{contentStats.snippets}</span>
+                <span class="label">Snippets</span>
+              </div>
+            </div>
+            <div class="action-buttons">
+              <a href="https://github.com/jlog-dev" target="_blank" class="action-btn">
+                <span class="icon">🔗</span> GitHub
+              </a>
+              <a href="mailto:you@example.com" class="action-btn">
+                <span class="icon">✉️</span> Email
+              </a>
+            </div>
           </div>
         </div>
       </div>
-    </header>
 
-    <!-- Full Width Main Content -->
-    <main class="full-width-content">
-
-  <!-- Current Focus -->
-  {currentActivity && (
-    <section class="current-focus">
-      <div class="focus-card">
-        <div class="focus-header">
-          <div class="status-indicator">
-            <span class="pulse"></span>
-            <span class="text">Latest</span>
+      <!-- Current Focus -->
+      {currentActivity && (
+        <div class="current-focus" style="margin-top: var(--spacing-3xl);">
+          <div class="focus-card">
+            <div class="focus-header">
+              <div class="status-indicator">
+                <span class="pulse"></span>
+                <span class="text">Latest</span>
+              </div>
+            </div>
+            <h2><a href={`/blog/${currentActivity.slug}`}>{currentActivity.data.title}</a></h2>
+            <p>{currentActivity.data.description}</p>
+            <div class="focus-meta">
+              <time>{currentActivity.data.pubDate.toLocaleDateString()}</time>
+              <span class="type">Blog Post</span>
+            </div>
           </div>
         </div>
-        <h2><a href={`/blog/${currentActivity.slug}`}>{currentActivity.data.title}</a></h2>
-        <p>{currentActivity.data.description}</p>
-        <div class="focus-meta">
-          <time>{currentActivity.data.pubDate.toLocaleDateString()}</time>
-          <span class="type">Blog Post</span>
-        </div>
-      </div>
+      )}
     </section>
-  )}
 
-  <!-- Content Sections -->
-  <section class="content-sections">
-    <div class="section-grid">
+    <!-- Content Sections -->
+    <section class="content-sections">
+      <div class="content-wrapper">
+        <div class="section-grid">
       <!-- Blog Section -->
       <div class="content-section">
         <div class="section-header">
@@ -150,95 +150,137 @@ const currentActivity = recentBlogPosts[0];
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-      <!-- Interactive Activity Feed (Client-side loaded) -->
-      <section class="activity-feed">
-        <div class="feed-header">
-          <h3>Recent Activity</h3>
-          <button class="load-more" id="load-activity">Load Timeline</button>
         </div>
-        <div class="feed-content" id="activity-timeline" style="display: none;">
-          <!-- Content loaded via client-side script -->
-        </div>
-      </section>
-    </main>
-  </div>
+      </div>
+    </section>
 
-  <!-- Client-side Activity Timeline Component -->
-  <script>
-    class ActivityTimeline extends HTMLElement {
-      private loadButton: HTMLButtonElement | null;
-      private timeline: HTMLElement | null;
-      
-      constructor() {
-        super();
-        this.loadButton = this.querySelector('#load-activity') as HTMLButtonElement;
-        this.timeline = this.querySelector('#activity-timeline') as HTMLElement;
-        
-        if (this.loadButton) {
-          this.loadButton.addEventListener('click', () => this.loadTimeline());
-        }
-      }
-      
-      async loadTimeline(): Promise<void> {
-        if (!this.loadButton || !this.timeline) return;
-        
-        this.loadButton.textContent = 'Loading...';
-        this.loadButton.disabled = true;
-        
-        try {
-          // Load activity data dynamically
-          await new Promise(resolve => setTimeout(resolve, 800));
-          
-          this.timeline.innerHTML = `
-            <div class="timeline-items">
-              <div class="timeline-item">
-                <div class="timeline-icon">📝</div>
-                <div class="timeline-content">
-                  <h4>Latest Blog Post</h4>
-                  <p>Recently published thoughts on software architecture</p>
-                  <time>2 days ago</time>
-                </div>
-              </div>
-              <div class="timeline-item">
-                <div class="timeline-icon">🚀</div>
-                <div class="timeline-content">
-                  <h4>Project Update</h4>
-                  <p>Added new features to personal website</p>
-                  <time>1 week ago</time>
-                </div>
+    <!-- Activity Feed -->
+    <section class="activity-section">
+      <div class="activity-feed">
+        <h2 class="section-title">
+          <span class="section-icon">⚡</span>
+          Activity Timeline
+        </h2>
+        <div class="timeline-container">
+          <div class="timeline-items">
+            <div class="timeline-item">
+              <div class="timeline-icon">📝</div>
+              <div class="timeline-content">
+                <h4>Published New Blog Post</h4>
+                <p>Shared insights on modern web development and cyberpunk design patterns</p>
+                <time>2 days ago</time>
               </div>
             </div>
-          `;
-          
-          this.timeline.style.display = 'block';
-          this.loadButton.style.display = 'none';
-        } catch (error) {
-          this.loadButton.textContent = 'Error loading timeline';
-        }
-      }
-    }
-    
-    customElements.define('activity-timeline', ActivityTimeline);
-  </script>
+            <div class="timeline-item">
+              <div class="timeline-icon">🚀</div>
+              <div class="timeline-content">
+                <h4>Website Redesign Complete</h4>
+                <p>Implemented full-screen layout with cyberpunk theme and scroll-snap sections</p>
+                <time>1 week ago</time>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon">💻</div>
+              <div class="timeline-content">
+                <h4>New Project Launch</h4>
+                <p>Released open-source component library with TypeScript support</p>
+                <time>2 weeks ago</time>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon">📚</div>
+              <div class="timeline-content">
+                <h4>Learning Update</h4>
+                <p>Completed advanced CSS animations course and applied new techniques</p>
+                <time>3 weeks ago</time>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-icon">🎯</div>
+              <div class="timeline-content">
+                <h4>Code Snippet Added</h4>
+                <p>Created reusable React hooks for form validation and state management</p>
+                <time>1 month ago</time>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
 
   <style>
-    /* Integrated Layout */
-    .integrated-layout {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 var(--spacing-md);
+    /* Full-screen Layout */
+    .fullscreen-layout {
+      width: 100%;
+      min-height: 100vh;
+    }
+    
+    /* Section containers */
+    .hero-section,
+    .content-sections,
+    .activity-section {
+      min-height: 100vh;
+      width: 100%;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: var(--spacing-2xl) var(--spacing-xl);
+      padding-top: var(--spacing-3xl);
     }
 
-    /* Integrated Header */
-    .integrated-header {
-      background: var(--bg-card);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-lg);
-      margin: var(--spacing-xl) 0 var(--spacing-2xl) 0;
-      padding: var(--spacing-xl);
+    /* Cyberpunk Header */
+    .hero-section .integrated-header {
+      background: rgba(22, 33, 62, 0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 2px solid var(--border-primary);
+      border-radius: var(--radius-xl);
+      margin: 0 0 var(--spacing-2xl) 0;
+      padding: var(--spacing-xl) var(--spacing-2xl);
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+      width: 100%;
+      max-width: 1400px;
+    }  
+
+    .hero-section .integrated-header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--bg-gradient);
+      box-shadow: 0 0 10px var(--color-neon-cyan);
+    }
+    
+    .integrated-header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 2px,
+          rgba(0, 245, 255, 0.03) 2px,
+          rgba(0, 245, 255, 0.03) 4px
+        );
+      pointer-events: none;
+      animation: scanlines 0.1s linear infinite;
+    }
+    
+    @keyframes scanlines {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(4px); }
     }
 
     .header-content {
@@ -258,22 +300,67 @@ const currentActivity = recentBlogPosts[0];
     .avatar {
       width: 80px;
       height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
+      border-radius: var(--radius-full);
       border: 3px solid var(--border-primary);
-      transition: transform var(--transition-base);
+      transition: all var(--transition-base);
       flex-shrink: 0;
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .avatar::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, var(--color-neon-cyan), var(--color-neon-pink), var(--color-neon-yellow), var(--color-neon-cyan));
+      animation: avatar-rotate 3s linear infinite;
+      z-index: -1;
+    }
+    
+    @keyframes avatar-rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     .avatar:hover {
-      transform: scale(1.05);
+      transform: scale(1.1);
+      box-shadow: var(--shadow-glow-pink);
+      border-color: var(--color-neon-pink);
     }
 
     .profile-info h1 {
-      font-size: var(--font-size-2xl);
+      font-size: var(--font-size-4xl);
       margin: 0 0 var(--spacing-xs) 0;
-      color: var(--text-primary);
+      color: var(--text-heading);
       font-weight: var(--font-weight-bold);
+      font-family: var(--font-family-display);
+      text-shadow: var(--shadow-neon-text);
+      animation: neon-flicker 2s ease-in-out infinite alternate;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    
+    @keyframes neon-flicker {
+      0%, 100% { 
+        color: var(--color-neon-cyan);
+        text-shadow: 
+          0 0 5px var(--color-neon-cyan),
+          0 0 10px var(--color-neon-cyan),
+          0 0 15px var(--color-neon-cyan),
+          0 0 20px var(--color-neon-cyan);
+      }
+      50% { 
+        color: var(--color-neon-pink);
+        text-shadow: 
+          0 0 5px var(--color-neon-pink),
+          0 0 10px var(--color-neon-pink),
+          0 0 15px var(--color-neon-pink),
+          0 0 20px var(--color-neon-pink);
+      }
     }
 
     .bio {
@@ -281,6 +368,8 @@ const currentActivity = recentBlogPosts[0];
       color: var(--text-secondary);
       margin: 0;
       line-height: var(--line-height-relaxed);
+      font-family: var(--font-family-base);
+      text-shadow: 0 0 3px rgba(160, 168, 204, 0.5);
     }
 
     /* Header Actions */
@@ -321,41 +410,118 @@ const currentActivity = recentBlogPosts[0];
     .contact-actions {
       display: flex;
       gap: var(--spacing-sm);
+      align-items: center;
+      gap: var(--spacing-xs);
+      text-align: center;
     }
 
     .action-btn {
       display: flex;
       align-items: center;
       gap: var(--spacing-xs);
-      padding: var(--spacing-sm) var(--spacing-md);
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-md);
-      color: var(--text-primary);
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: var(--button-bg);
+      border: 2px solid var(--border-primary);
+      border-radius: var(--radius-xl);
+      color: var(--button-text);
       text-decoration: none;
       font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      font-family: var(--font-family-base);
       transition: all var(--transition-base);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-glow);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .action-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left var(--transition-slow);
     }
 
     .action-btn:hover {
-      background: var(--color-accent);
-      color: white;
-      border-color: var(--color-accent);
-      transform: translateY(-1px);
+      background: var(--button-hover-bg);
+      color: var(--button-hover-text);
+      border-color: var(--color-neon-pink);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow-pink);
+      text-shadow: 0 0 5px var(--color-neon-pink);
+    }
+
+    .action-btn:hover::before {
+      left: 100%;
+    }
+
+    .action-btn:focus {
+      outline: none;
+      box-shadow: var(--shadow-glow), 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     .action-btn .icon {
       font-size: var(--font-size-sm);
     }
 
-    /* Full Width Content */
-    .full-width-content {
+    .section-title {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--text-heading);
+      margin: 0 0 var(--spacing-lg) 0;
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      font-family: var(--font-family-display);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 10px var(--color-neon-cyan);
+    }
+
+    .section-icon {
+      font-size: var(--font-size-3xl);
+      filter: drop-shadow(0 0 10px var(--color-neon-cyan));
+      animation: icon-glow 2s ease-in-out infinite alternate;
+    }
+    
+    @keyframes icon-glow {
+      0% { filter: drop-shadow(0 0 10px var(--color-neon-cyan)); }
+      100% { filter: drop-shadow(0 0 20px var(--color-neon-pink)); }
+    }
+
+    /* Content Sections Container */
+    .content-sections {
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+    }
+    
+    .content-wrapper {
+      max-width: 1400px;
       width: 100%;
     }
+
+    /* Hero Section */
+    .hero-section {
+      background: 
+        radial-gradient(circle at 30% 40%, rgba(0, 245, 255, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 70% 60%, rgba(255, 0, 255, 0.15) 0%, transparent 50%);
+      position: relative;
+    }
+    
 
     /* Current Focus - Adjusted for main content */
     .current-focus {
       margin-bottom: var(--spacing-2xl);
+      width: 100%;
+      max-width: 1400px;
     }
 
     .focus-card {
@@ -449,19 +615,43 @@ const currentActivity = recentBlogPosts[0];
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: var(--spacing-xl);
+      max-width: 1400px;
+      width: 100%;
     }
 
     .content-section {
-      background: var(--bg-card);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-lg);
-      padding: var(--spacing-lg);
-      transition: transform var(--transition-base), box-shadow var(--transition-base);
+      background: rgba(22, 33, 62, 0.8);
+      border: 2px solid var(--border-primary);
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-xl);
+      transition: all var(--transition-base);
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(15px);
+      box-shadow: var(--shadow-glow);
     }
 
     .content-section:hover {
       transform: translateY(-4px);
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--shadow-glow-pink);
+      border-color: var(--color-neon-pink);
+    }
+
+    .content-section::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--bg-gradient);
+      transform: scaleX(0);
+      transition: transform var(--transition-base);
+      box-shadow: 0 0 10px var(--color-neon-cyan);
+    }
+
+    .content-section:hover::before {
+      transform: scaleX(1);
     }
 
     .section-header {
@@ -564,12 +754,18 @@ const currentActivity = recentBlogPosts[0];
       display: inline-block;
       background: var(--color-accent);
       color: white;
-      padding: var(--spacing-sm) var(--spacing-md);
-      border-radius: var(--radius-md);
-      text-decoration: none;
+      padding: var(--spacing-md) var(--spacing-xl);
+      border-radius: var(--radius-xl);
       font-size: var(--font-size-sm);
       font-weight: var(--font-weight-medium);
-      transition: background var(--transition-base);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-md);
     }
 
     .cta-button:hover {
@@ -577,9 +773,72 @@ const currentActivity = recentBlogPosts[0];
       opacity: 0.9;
     }
 
+    /* Activity Section */
+    .activity-section {
+      background: 
+        radial-gradient(circle at 50% 20%, rgba(0, 245, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 30% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 50%);
+    }
+    
     /* Activity Feed - Progressive Loading */
     .activity-feed {
-      margin: var(--spacing-2xl) 0;
+      max-width: 1400px;
+      width: 100%;
+    }
+
+    .load-timeline-btn {
+      background: var(--bg-gradient);
+      color: var(--text-primary);
+      border: 2px solid var(--border-primary);
+      padding: var(--spacing-md) var(--spacing-xl);
+      border-radius: var(--radius-xl);
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      font-family: var(--font-family-base);
+      cursor: pointer;
+      transition: all var(--transition-base);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-glow);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 5px var(--color-neon-cyan);
+    }
+
+    .load-timeline-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left var(--transition-slow);
+    }
+
+    .load-timeline-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: var(--shadow-xl);
+    }
+
+    .load-timeline-btn:hover::before {
+      left: 100%;
+    }
+
+    .load-timeline-btn:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .loading-spinner {
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     .feed-header {
@@ -633,20 +892,73 @@ const currentActivity = recentBlogPosts[0];
     .timeline-item {
       display: flex;
       gap: var(--spacing-md);
-      align-items: flex-start;
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-base);
+      position: relative;
+      background: rgba(26, 26, 46, 0.8);
+      border: 2px solid var(--border-primary);
+      margin-bottom: var(--spacing-md);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .timeline-item:hover {
+      background: rgba(22, 33, 62, 0.9);
+      transform: translateX(8px);
+      box-shadow: var(--shadow-glow);
+      border-color: var(--color-neon-pink);
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--bg-gradient);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      opacity: 0;
+      transition: opacity var(--transition-base);
+      box-shadow: 0 0 10px var(--color-neon-cyan);
+    }
+
+    .timeline-item:hover::before {
+      opacity: 1;
     }
 
     .timeline-icon {
-      flex-shrink: 0;
-      width: 40px;
-      height: 40px;
-      background: var(--bg-secondary);
-      border: 2px solid var(--border-primary);
-      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-full);
+      background: var(--bg-gradient);
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: var(--font-size-lg);
+      flex-shrink: 0;
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--border-primary);
+      animation: timeline-icon-pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes timeline-icon-pulse {
+      0%, 100% { box-shadow: var(--shadow-glow); }
+      50% { box-shadow: var(--shadow-glow-pink); }
+    }
+
+    .timeline-icon::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, rgba(255, 255, 255, 0.1), transparent);
+      border-radius: var(--radius-full);
     }
 
     .timeline-content h4 {
@@ -688,33 +1000,61 @@ const currentActivity = recentBlogPosts[0];
       
       .integrated-header {
         margin: var(--spacing-lg) 0;
-        padding: var(--spacing-lg);
+        padding: var(--spacing-xl);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
       }
       
       .header-content {
         flex-direction: column;
         align-items: center;
         text-align: center;
-        gap: var(--spacing-lg);
+        gap: var(--spacing-xl);
       }
       
       .profile-section {
         flex-direction: column;
         text-align: center;
-        gap: var(--spacing-md);
+        gap: var(--spacing-lg);
+      }
+      
+      .profile-info h1 {
+        font-size: var(--font-size-3xl);
       }
       
       .header-actions {
         align-items: center;
+        width: 100%;
+      }
+      
+      .stats-row {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: var(--spacing-lg);
       }
       
       .contact-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: var(--spacing-md);
+      }
+      
+      .action-btn {
+        min-width: 120px;
         justify-content: center;
       }
       
       .section-grid {
         grid-template-columns: 1fr;
-        gap: var(--spacing-lg);
+        gap: var(--spacing-xl);
+      }
+      
+      .content-section {
+        padding: var(--spacing-lg);
+      }
+      
+      .section-title {
+        font-size: var(--font-size-xl);
       }
       
       .feed-header {
@@ -725,44 +1065,82 @@ const currentActivity = recentBlogPosts[0];
       
       .timeline-item {
         gap: var(--spacing-sm);
+        padding: var(--spacing-md);
       }
       
       .timeline-icon {
-        width: 32px;
-        height: 32px;
+        width: 40px;
+        height: 40px;
         font-size: var(--font-size-base);
       }
     }
 
     @media (max-width: 480px) {
+      .integrated-layout {
+        padding: 0 var(--spacing-xs);
+      }
+      
       .integrated-header {
-        padding: var(--spacing-md);
+        padding: var(--spacing-lg);
+        margin: var(--spacing-md) 0;
       }
       
       .avatar {
-        width: 60px;
-        height: 60px;
+        width: 64px;
+        height: 64px;
       }
       
       .profile-info h1 {
-        font-size: var(--font-size-xl);
+        font-size: var(--font-size-2xl);
+      }
+      
+      .bio {
+        font-size: var(--font-size-sm);
       }
       
       .stats-row {
         gap: var(--spacing-sm);
+        justify-content: space-around;
+      }
+      
+      .stat {
+        min-width: 80px;
       }
       
       .stat .number {
         font-size: var(--font-size-lg);
       }
       
+      .stat .label {
+        font-size: 10px;
+      }
+      
       .contact-actions {
         flex-direction: column;
         width: 100%;
+        gap: var(--spacing-sm);
       }
       
       .action-btn {
+        width: 100%;
         justify-content: center;
+        padding: var(--spacing-sm) var(--spacing-md);
+      }
+      
+      .section-grid {
+        gap: var(--spacing-lg);
+      }
+      
+      .content-section {
+        padding: var(--spacing-md);
+      }
+      
+      .section-title {
+        font-size: var(--font-size-lg);
+      }
+      
+      .section-icon {
+        font-size: var(--font-size-xl);
       }
     }
   </style>

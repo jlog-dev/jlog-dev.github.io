@@ -33,21 +33,6 @@ const secondaryNav = [
             <a href={link.href} class="nav-link">{link.label}</a>
           </li>
         ))}
-        <li class="nav-dropdown">
-          <button class="nav-link dropdown-toggle" id="more-menu" aria-expanded="false">
-            More
-            <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-              <path d="M6 8.5L2.5 5h7L6 8.5z"/>
-            </svg>
-          </button>
-          <ul class="dropdown-menu" role="menu">
-            {secondaryNav.map((link) => (
-              <li role="none">
-                <a href={link.href} class="dropdown-link" role="menuitem">{link.label}</a>
-              </li>
-            ))}
-          </ul>
-        </li>
       </ul>
     </div>
     
@@ -58,13 +43,23 @@ const secondaryNav = [
       <span class="hamburger-line"></span>
     </button>
     
-    <!-- Actions -->
-    <div class="header-actions">
-      <button id="theme-toggle" class="action-btn" aria-label="Toggle theme">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z"/>
-        </svg>
-      </button>
+    <!-- More Dropdown -->
+    <div class="more-section">
+      <div class="nav-dropdown">
+        <button class="nav-link dropdown-toggle" id="more-menu" aria-expanded="false">
+          More
+          <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+            <path d="M6 8.5L2.5 5h7L6 8.5z"/>
+          </svg>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          {secondaryNav.map((link) => (
+            <li role="none">
+              <a href={link.href} class="dropdown-link" role="menuitem">{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   </nav>
   
@@ -87,29 +82,49 @@ const secondaryNav = [
 </header>
 
 <style>
-  /* Modern Header Layout */
+  /* Floating Header Layout */
   .site-header {
-    background: var(--bg-primary);
-    border-bottom: 1px solid var(--border-primary);
-    position: sticky;
+    position: fixed;
+    top: var(--spacing-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    width: calc(100% - var(--spacing-2xl));
+    max-width: 1400px;
+    background: rgba(22, 33, 62, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 2px solid var(--border-primary);
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-glow);
+    transition: all var(--transition-base);
+  }
+  
+  .site-header::before {
+    content: '';
+    position: absolute;
     top: 0;
-    z-index: 50;
-    backdrop-filter: blur(8px);
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--bg-gradient);
+    border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+    box-shadow: 0 0 10px var(--color-neon-cyan);
   }
 
   .nav-container {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 var(--spacing-md);
-    height: 64px;
-    display: flex;
+    padding: var(--spacing-md) var(--spacing-lg);
+    height: 60px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
     align-items: center;
-    justify-content: space-between;
+    gap: var(--spacing-lg);
+    position: relative;
   }
 
   /* Brand Section */
   .brand-section {
-    flex-shrink: 0;
+    grid-column: 1;
   }
 
   .logo {
@@ -123,25 +138,38 @@ const secondaryNav = [
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
     color: var(--text-primary);
-    transition: color var(--transition-base);
+    font-family: var(--font-family-display);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 5px var(--color-neon-cyan);
+    transition: all var(--transition-base);
   }
 
   .logo-subtitle {
     font-size: var(--font-size-xs);
-    color: var(--text-secondary);
+    color: var(--color-neon-cyan);
+    font-family: var(--font-family-mono);
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.1em;
     margin-top: -2px;
+    opacity: 0.8;
   }
 
   .logo:hover .logo-text {
-    color: var(--color-accent);
+    color: var(--color-neon-pink);
+    text-shadow: 0 0 10px var(--color-neon-pink);
+  }
+  
+  .logo:hover .logo-subtitle {
+    color: var(--color-neon-pink);
   }
 
   /* Desktop Navigation */
   .desktop-nav {
+    grid-column: 2;
     display: flex;
     align-items: center;
+    justify-content: center;
   }
 
   .nav-links {
@@ -170,8 +198,11 @@ const secondaryNav = [
   }
 
   .nav-link:hover {
-    color: var(--color-accent);
-    background: var(--bg-secondary);
+    color: var(--color-neon-cyan);
+    background: rgba(0, 245, 255, 0.1);
+    text-shadow: 0 0 5px var(--color-neon-cyan);
+    border: 1px solid var(--color-neon-cyan);
+    box-shadow: 0 0 5px rgba(0, 245, 255, 0.3);
   }
 
   /* Dropdown */
@@ -267,30 +298,11 @@ const secondaryNav = [
     transform: rotate(-45deg) translate(7px, -6px);
   }
 
-  /* Header Actions */
-  .header-actions {
+  /* More Section */
+  .more-section {
+    grid-column: 3;
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
-  }
-
-  .action-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 40px;
-    height: 40px;
-    background: none;
-    border: none;
-    color: var(--text-primary);
-    cursor: pointer;
-    border-radius: var(--radius-md);
-    transition: all var(--transition-base);
-  }
-
-  .action-btn:hover {
-    background: var(--bg-secondary);
-    color: var(--color-accent);
   }
 
   /* Mobile Navigation */
@@ -369,41 +381,6 @@ const secondaryNav = [
 </style>
 
 <script is:inline>
-  // Theme toggle functionality
-  const storageKey = "theme";
-  const classNameDark = "dark";
-  const toggle = document.getElementById("theme-toggle");
-
-  const applyTheme = (isDark) => {
-    const root = document.documentElement;
-    if (isDark) {
-      root.classList.add(classNameDark);
-    } else {
-      root.classList.remove(classNameDark);
-    }
-  };
-
-  const getThemePreference = () => {
-    if (typeof localStorage !== "undefined" && localStorage.getItem(storageKey)) {
-      return localStorage.getItem(storageKey);
-    }
-    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-  };
-
-  const isDark = getThemePreference() === "dark";
-  applyTheme(isDark);
-
-  if (typeof localStorage !== "undefined") {
-    const observer = new MutationObserver(() => {
-      const isDark = document.documentElement.classList.contains(classNameDark);
-      localStorage.setItem(storageKey, isDark ? "dark" : "light");
-    });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
-  }
-
-  toggle?.addEventListener("click", () => {
-    document.documentElement.classList.toggle(classNameDark);
-  });
 
   // Modern dropdown functionality
   document.addEventListener('DOMContentLoaded', () => {
