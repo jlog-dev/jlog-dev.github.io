@@ -1,143 +1,319 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-const AVATAR_URL = "/avatar.jpg";
+import { User, Globe, Code, BookOpen, Wrench, Sparkles, Mail } from "lucide-astro";
 ---
 
 <BaseLayout title="About">
   <div class="about-page">
-    <img src={AVATAR_URL} alt="Avatar of Jing Li" class="avatar" />
+    <div class="hero-section">
+      <div class="name-badge">
+        <User class="user-icon" size={32} />
+        <h1>Jing Li</h1>
+      </div>
+    </div>
 
-    <h1>👤 Jing Li</h1>
-
-    <section class="intro">
-      <p>
-        I believe that each of us comes here with only one true purpose:
-        <strong>to become who we truly are.</strong>
-      </p>
-      <p>
-        Every day, I seek to understand this answer. When I am happy, I know who
-        I am. When I am alone, I still know.
-      </p>
-      <p>
-        Sometimes, the journey feels so authentic that I forget why I started.
-        But I believe there's a principle that rules all beings — one we can
-        sense, but not capture with words.
-      </p>
+    <section class="intro-section">
+      <div class="intro-card">
+        <p>
+          I believe that each of us comes here with only one true purpose:
+          <strong>to become who we truly are.</strong>
+        </p>
+        <p>
+          Every day, I seek to understand this answer. When I am happy, I know who
+          I am. When I am alone, I still know.
+        </p>
+        <p>
+          Sometimes, the journey feels so authentic that I forget why I started.
+          But I believe there's a principle that rules all beings — one we can
+          sense, but not capture with words.
+        </p>
+      </div>
     </section>
 
-    <section class="section">
-      <h2>📘 About This Site</h2>
-      <ul>
-        <li>🛠 Technical notes, tutorials, and project learnings</li>
-        <li>📚 Book notes, movie thoughts, and broader reflections</li>
-        <li>✨ Things I find curious, challenging, or inspiring</li>
-      </ul>
+    <section class="content-section">
+      <h2><Globe class="section-icon" /> About This Site</h2>
+      <div class="site-features">
+        <div class="feature-item">
+          <Wrench class="feature-icon" />
+          <span>Technical notes, tutorials, and project learnings</span>
+        </div>
+        <div class="feature-item">
+          <BookOpen class="feature-icon" />
+          <span>Book notes, movie thoughts, and broader reflections</span>
+        </div>
+        <div class="feature-item">
+          <Sparkles class="feature-icon" />
+          <span>Things I find curious, challenging, or inspiring</span>
+        </div>
+      </div>
       <p>
-        It’s a living archive of ideas — a space for both precision and
+        It's a living archive of ideas — a space for both precision and
         exploration.
       </p>
     </section>
 
-    <section class="section">
-      <h2>💼 Skills & Stack</h2>
-      <div class="skills">
-        <div>
-          <strong>Languages:</strong> JavaScript, TypeScript, Python, Markdown
+    <section class="content-section">
+      <h2><Code class="section-icon" /> Skills & Stack</h2>
+      <div class="skills-grid">
+        <div class="skill-category">
+          <strong>Languages</strong>
+          <span>JavaScript, TypeScript, Python, Markdown</span>
         </div>
-        <div>
-          <strong>Frontend:</strong> Astro, React, Tailwind CSS, HTML/CSS
+        <div class="skill-category">
+          <strong>Frontend</strong>
+          <span>Astro, React, Tailwind CSS, HTML/CSS</span>
         </div>
-        <div><strong>Tools:</strong> Git, VS Code, ChatGPT, Vite, Netlify</div>
-        <div>
-          <strong>Interests:</strong> Knowledge management, Writing, Indie dev
+        <div class="skill-category">
+          <strong>Tools</strong>
+          <span>Git, VS Code, ChatGPT, Vite, Netlify</span>
+        </div>
+        <div class="skill-category">
+          <strong>Interests</strong>
+          <span>Knowledge management, Writing, Indie dev</span>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <h2>🌐 Want to connect?</h2>
+    <section class="content-section">
+      <h2><Mail class="section-icon" /> Want to connect?</h2>
       <p>
-        You’ll find my links at the bottom of this page. Feel free to reach out
-        — I’d love to hear from you.
+        You'll find my links at the bottom of this page. Feel free to reach out
+        — I'd love to hear from you.
       </p>
     </section>
   </div>
 
   <style>
     .about-page {
-      max-width: 720px;
+      max-width: 1000px;
       margin: 0 auto;
-      padding: 4rem 1.5rem;
-      font-family: system-ui, sans-serif;
+      padding: var(--spacing-xl) var(--spacing-md);
       line-height: 1.7;
-      color: var(--text);
-      text-align: center;
-      transition:
-        color 0.3s ease,
-        background 0.3s ease;
     }
 
-    .avatar {
-      width: 96px;
-      height: 96px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin: 0 auto 1rem;
-      border: 2px solid var(--avatar-border);
+    /* Hero Section */
+    .hero-section {
+      text-align: center;
+      margin-bottom: var(--spacing-2xl);
+    }
+
+    .name-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      background: var(--bg-card);
+      border: 2px solid var(--border-primary);
+      border-radius: var(--radius-2xl);
+      padding: var(--spacing-lg) var(--spacing-xl);
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .name-badge::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--bg-gradient);
+      box-shadow: 0 0 10px var(--color-accent);
+    }
+
+    .user-icon {
+      color: var(--color-accent);
+      filter: drop-shadow(0 0 8px var(--color-accent));
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 2rem;
-      color: var(--heading);
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--text-heading);
+      margin: 0;
+      font-family: var(--font-family-display);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 10px var(--color-accent);
     }
 
-    .intro {
-      font-size: 1.1rem;
-      color: var(--subtle-text);
-      margin-bottom: 3rem;
+    /* Intro Section */
+    .intro-section {
+      margin-bottom: var(--spacing-2xl);
     }
 
-    .section {
-      background: var(--card-bg);
-      padding: 1.5rem;
-      border-radius: 8px;
-      margin-bottom: 2rem;
-      border: 1px solid var(--border);
-      text-align: left;
-      transition:
-        background 0.3s ease,
-        border 0.3s ease;
+    .intro-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      text-align: center;
+      font-size: var(--font-size-lg);
+      color: var(--text-secondary);
+      line-height: 1.8;
+      position: relative;
+      overflow: hidden;
     }
 
-    .section h2 {
-      font-size: 1.4rem;
-      margin-bottom: 1rem;
-      color: var(--heading);
+    .intro-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+      animation: shimmer 3s ease-in-out infinite;
     }
 
-    .section ul {
-      list-style: none;
-      padding-left: 1rem;
-      margin: 0 0 1rem;
+    @keyframes shimmer {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
     }
 
-    .section ul li {
-      margin-bottom: 0.5rem;
+    .intro-card p {
+      margin-bottom: var(--spacing-md);
     }
 
-    .skills div {
-      margin-bottom: 0.5rem;
-      font-size: 0.95rem;
+    .intro-card p:last-child {
+      margin-bottom: 0;
     }
 
-    a {
-      color: var(--link-color);
-      text-decoration: none;
+    .intro-card strong {
+      color: var(--text-heading);
+      font-weight: var(--font-weight-semibold);
     }
 
-    a:hover {
-      text-decoration: underline;
+    /* Content Sections */
+    .content-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xl);
+      margin-bottom: var(--spacing-xl);
+      transition: all var(--transition-base);
+    }
+
+    .content-section:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-glow);
+      border-color: var(--color-accent);
+    }
+
+    .content-section h2 {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-heading);
+      margin-bottom: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      border-bottom: 2px solid var(--color-accent);
+      padding-bottom: var(--spacing-sm);
+    }
+
+    .section-icon {
+      width: 24px;
+      height: 24px;
+      color: var(--color-accent);
+      filter: drop-shadow(0 0 5px var(--color-accent));
+    }
+
+    /* Site Features */
+    .site-features {
+      display: grid;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      padding: var(--spacing-md);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-secondary);
+      border-radius: var(--radius-md);
+      transition: all var(--transition-base);
+    }
+
+    .feature-item:hover {
+      background: var(--bg-primary);
+      border-color: var(--color-accent);
+      transform: translateX(4px);
+    }
+
+    .feature-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--color-accent);
+      flex-shrink: 0;
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .skill-category {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-secondary);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-sm);
+      transition: all var(--transition-base);
+    }
+
+    .skill-category:hover {
+      background: var(--bg-primary);
+      border-color: var(--color-accent);
+      transform: translateY(-2px);
+    }
+
+    .skill-category strong {
+      color: var(--text-heading);
+      font-weight: var(--font-weight-semibold);
+      font-size: var(--font-size-base);
+    }
+
+    .skill-category span {
+      color: var(--text-secondary);
+      font-size: var(--font-size-sm);
+      line-height: 1.5;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .about-page {
+        padding: var(--spacing-lg) var(--spacing-sm);
+      }
+
+      .name-badge {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-lg);
+      }
+
+      h1 {
+        font-size: var(--font-size-xl);
+      }
+
+      .intro-card {
+        font-size: var(--font-size-base);
+        padding: var(--spacing-lg);
+      }
+
+      .content-section {
+        padding: var(--spacing-lg);
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </BaseLayout>
