@@ -152,6 +152,9 @@ Legacy variable names are aliased to new system:
 
 ### Adding New Components
 ```css
+/* Import theme system */
+@import '../themes/index.css';
+
 /* Use semantic variables */
 .new-component {
   background: var(--bg-card);
@@ -159,6 +162,12 @@ Legacy variable names are aliased to new system:
   padding: var(--spacing-md);
   border-radius: var(--radius-lg);
   transition: background var(--transition-base);
+}
+
+/* Or use utility classes */
+.new-component {
+  @extend .theme-card;
+  /* Additional styles */
 }
 ```
 
@@ -203,14 +212,20 @@ Legacy variable names are aliased to new system:
 ## 🔧 Development Workflow
 
 ### Adding New Colors
-1. Add to `themes.css` with semantic naming
-2. Include dark mode variant
+1. Add to `themes/variables.css` with semantic naming
+2. Include dark mode variant in the `html.dark` section
 3. Update component styles to use new variables
 4. Test in both light and dark modes
 
 ### Modifying Existing Themes
-1. Update values in `themes.css`
+1. Update values in `themes/variables.css`
 2. Changes automatically propagate to all components
 3. Test across all pages and components
+
+### Working with Theme Files
+- **`themes/variables.css`**: Core design tokens and color system
+- **`themes/legacy.css`**: Backward compatibility (can be removed after migration)
+- **`themes/mixins.css`**: Reusable patterns and utility classes
+- **`themes/index.css`**: Main entry point that imports all theme files
 
 This centralized system provides a solid foundation for consistent, maintainable, and scalable styling across the entire website.
