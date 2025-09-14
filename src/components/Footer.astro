@@ -3,100 +3,29 @@
 ---
 
 <footer class="site-footer">
-  <div class="footer-grid">
-    <div class="left">
-      <div class="social-icons">
-        <a
-          href="https://github.com/jlog-dev"
-          target="_blank"
-          aria-label="GitHub">GitHub</a
-        >
-        <a href="mailto:you@example.com" aria-label="Email">Email</a>
-      </div>
-      <p class="copyright">
-        © {new Date().getFullYear()} Jing Li • All rights reserved.
-      </p>
-    </div>
-    <div class="right wechat-box">
-      <img src="/wechat-qrcode.png" alt="WeChat QR Code" />
-      <p class="caption">Follow me on WeChat</p>
-    </div>
+  <div class="footer-content">
+    <p class="copyright">
+      © {new Date().getFullYear()} Jing Li • All rights reserved.
+    </p>
   </div>
 </footer>
 
 <style>
   .site-footer {
-    padding: var(--spacing-xl) var(--spacing-md);
+    padding: var(--spacing-md) var(--spacing-md);
     background: var(--bg-footer);
     border-top: 1px solid var(--border-primary);
-    font-size: var(--font-size-base);
-    color: var(--text-secondary);
+    text-align: center;
   }
 
-  .footer-grid {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
+  .footer-content {
     max-width: var(--container-wide-max-width);
     margin: 0 auto;
-    gap: var(--spacing-lg);
-  }
-
-  .left {
-    flex: 1;
-  }
-
-  .social-icons {
-    display: flex;
-    gap: var(--spacing-lg);
-    margin-bottom: var(--spacing-sm);
-  }
-
-  .social-icons a {
-    color: var(--icon-color);
-    text-decoration: none;
-    transition: color var(--transition-base);
-  }
-
-  .social-icons a:hover {
-    color: var(--icon-hover-color);
   }
 
   .copyright {
     font-size: var(--font-size-sm);
     color: var(--text-meta);
     margin: 0;
-  }
-
-  .wechat-box {
-    text-align: center;
-  }
-
-  .wechat-box img {
-    width: 96px;
-    height: 96px;
-    border: 1px solid var(--border-primary);
-    border-radius: var(--radius-lg);
-    object-fit: contain;
-  }
-
-  .caption {
-    font-size: var(--font-size-xs);
-    margin-top: var(--spacing-xs);
-    color: var(--text-meta);
-  }
-
-  @media (max-width: 640px) {
-    .footer-grid {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
-
-    .left,
-    .right {
-      width: 100%;
-    }
   }
 </style>

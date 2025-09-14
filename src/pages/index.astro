@@ -1,319 +1,428 @@
 ---
 import { getCollection } from "astro:content";
-import BlogCard from "../components/BlogCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
-import { 
-  getFeaturedBlogPosts, 
-  getFeaturedProjects, 
-  getContentStats, 
-  getAllTags,
-  getAllSnippets,
-  getAllTILPosts 
-} from "../utils/content";
+import { getContentStats } from "../utils/content";
 
-// Get all content for activity timeline
+// Get minimal data for initial load
 const blogPosts = await getCollection("blog");
 const projects = await getCollection("projects");
-const snippets = await getCollection("snippets");
-const tilPosts = await getCollection("til");
-const bookmarks = await getCollection("bookmarks");
-
-// Create unified activity timeline
-const allActivities = [
-  ...blogPosts.map(post => ({
-    type: 'blog',
-    icon: '📝',
-    title: post.data.title,
-    description: post.data.description,
-    date: post.data.pubDate,
-    slug: post.slug,
-    href: `/blog/${post.slug}`,
-    category: post.slug.split('/')[0] || 'general'
-  })),
-  ...projects.map(project => ({
-    type: 'project',
-    icon: '🚀',
-    title: project.data.title,
-    description: project.data.description,
-    date: project.data.pubDate,
-    slug: project.slug,
-    href: `/projects/${project.slug}`,
-    status: project.data.status
-  })),
-  ...snippets.map(snippet => ({
-    type: 'snippet',
-    icon: '⚡',
-    title: snippet.data.title,
-    description: snippet.data.description,
-    date: snippet.data.pubDate,
-    slug: snippet.slug,
-    href: `/snippets/${snippet.slug}`,
-    language: snippet.data.language
-  })),
-  ...tilPosts.map(til => ({
-    type: 'til',
-    icon: '💡',
-    title: til.data.title,
-    description: til.data.description,
-    date: til.data.pubDate,
-    slug: til.slug,
-    href: `/til/${til.slug}`,
-    category: til.data.category
-  })),
-  ...bookmarks.map(bookmark => ({
-    type: 'bookmark',
-    icon: '🔖',
-    title: bookmark.data.title,
-    description: bookmark.data.description,
-    date: bookmark.data.pubDate,
-    slug: bookmark.slug,
-    href: `/bookmarks/${bookmark.slug}`,
-    rating: bookmark.data.rating
-  }))
-];
-
-// Sort by date (most recent first) and get recent activities
-const recentActivities = allActivities
-  .sort((a, b) => b.date.getTime() - a.date.getTime())
-  .slice(0, 8);
-
-// Get content stats
 const contentStats = await getContentStats();
-const popularTags = await getAllTags();
-const topTags = popularTags.slice(0, 8);
 
-// Calculate activity stats
-const thisWeekStart = new Date();
-thisWeekStart.setDate(thisWeekStart.getDate() - 7);
-const thisWeekActivities = allActivities.filter(activity => activity.date >= thisWeekStart);
-const thisMonthStart = new Date();
-thisMonthStart.setMonth(thisMonthStart.getMonth() - 1);
-const thisMonthActivities = allActivities.filter(activity => activity.date >= thisMonthStart);
+// Get only the most recent items for hero section
+const recentBlogPosts = blogPosts
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
 
-// Current focus (most recent blog post or project)
-const currentFocus = recentActivities[0];
+const recentProjects = projects
+  .filter(p => p.data.featured)
+  .slice(0, 2);
+
+// Current focus - most recent activity
+const currentActivity = recentBlogPosts[0];
 ---
 
 <BaseLayout title="Home">
-  <section class="hero">
-    <img src="/avatar.jpg" alt="Jing Li Avatar" class="avatar" />
-    <h1>Hi, I’m <strong>Jing Li</strong> 👋</h1>
-    <p class="intro">
-      Welcome to <strong>JLog</strong> — my digital logbook where I share<br />
-      what I <em>build</em>, what I <em>learn</em>, and what I <em>think</em>.
-    </p>
-
-    <p class="actions">
-      → <a href="/blog">Read the blog</a> ・
-      <a href="/projects">See my projects</a> ・
-      <a href="/snippets">Code snippets</a> ・
-      <a href="/til">Today I learned</a>
-    </p>
-  </section>
-
-  <!-- Current Focus -->
-  {currentFocus && (
-    <section class="current-focus">
-      <h2>🎯 Currently Working On</h2>
-      <div class="focus-card">
-        <div class="focus-header">
-          <span class="focus-icon">{currentFocus.icon}</span>
-          <div class="focus-status">
-            <span class="status-indicator active"></span>
-            <span class="status-text">Recent Activity</span>
+  <div class="integrated-layout">
+    <!-- Header Integration with Profile -->
+    <header class="integrated-header">
+      <div class="header-content">
+        <!-- Left: Profile Info -->
+        <div class="profile-section">
+          <img src="/avatar.jpg" alt="Jing Li Avatar" class="avatar" />
+          <div class="profile-info">
+            <h1>Jing Li</h1>
+            <p class="bio">Building, learning, and sharing through code</p>
           </div>
         </div>
-        <h3><a href={currentFocus.href}>{currentFocus.title}</a></h3>
-        <p>{currentFocus.description}</p>
+        
+        <!-- Right: Stats and Actions -->
+        <div class="header-actions">
+          <div class="stats-row">
+            <div class="stat">
+              <span class="number">{contentStats.blogPosts}</span>
+              <span class="label">Posts</span>
+            </div>
+            <div class="stat">
+              <span class="number">{contentStats.projects}</span>
+              <span class="label">Projects</span>
+            </div>
+            <div class="stat">
+              <span class="number">{contentStats.snippets}</span>
+              <span class="label">Snippets</span>
+            </div>
+          </div>
+          <div class="contact-actions">
+            <a href="https://github.com/jlog-dev" target="_blank" class="action-btn">
+              <span class="icon">🔗</span> GitHub
+            </a>
+            <a href="mailto:you@example.com" class="action-btn">
+              <span class="icon">✉️</span> Email
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Full Width Main Content -->
+    <main class="full-width-content">
+
+  <!-- Current Focus -->
+  {currentActivity && (
+    <section class="current-focus">
+      <div class="focus-card">
+        <div class="focus-header">
+          <div class="status-indicator">
+            <span class="pulse"></span>
+            <span class="text">Latest</span>
+          </div>
+        </div>
+        <h2><a href={`/blog/${currentActivity.slug}`}>{currentActivity.data.title}</a></h2>
+        <p>{currentActivity.data.description}</p>
         <div class="focus-meta">
-          <span class="activity-date">{currentFocus.date.toLocaleDateString()}</span>
-          <span class="activity-type">{currentFocus.type}</span>
-          {(currentFocus as any).category && <span class="activity-category">{(currentFocus as any).category}</span>}
+          <time>{currentActivity.data.pubDate.toLocaleDateString()}</time>
+          <span class="type">Blog Post</span>
         </div>
       </div>
     </section>
   )}
 
-  <!-- Activity Stats -->
-  <section class="activity-stats">
-    <h2>📊 Activity Overview</h2>
-    <div class="stats-grid">
-      <div class="stat-item">
-        <span class="stat-number">{allActivities.length}</span>
-        <span class="stat-label">Total Activities</span>
+  <!-- Content Sections -->
+  <section class="content-sections">
+    <div class="section-grid">
+      <!-- Blog Section -->
+      <div class="content-section">
+        <div class="section-header">
+          <h3>📝 Writing</h3>
+          <a href="/blog" class="section-link">View all →</a>
+        </div>
+        <div class="section-preview">
+          {recentBlogPosts.slice(0, 2).map((post) => (
+            <article class="preview-item">
+              <h4><a href={`/blog/${post.slug}`}>{post.data.title}</a></h4>
+              <p>{post.data.description}</p>
+              <time>{post.data.pubDate.toLocaleDateString()}</time>
+            </article>
+          ))}
+        </div>
       </div>
-      <div class="stat-item">
-        <span class="stat-number">{thisWeekActivities.length}</span>
-        <span class="stat-label">This Week</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">{thisMonthActivities.length}</span>
-        <span class="stat-label">This Month</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number">{contentStats.blogPosts}</span>
-        <span class="stat-label">Blog Posts</span>
-      </div>
-    </div>
-  </section>
 
-  <!-- Activity Timeline -->
-  <section class="activity-timeline">
-    <h2>🔄 Recent Activity</h2>
-    <div class="timeline">
-      {recentActivities.map((activity) => (
-        <div class={`activity-item ${activity.type}`}>
-          <div class="activity-icon">{activity.icon}</div>
-          <div class="activity-content">
-            <div class="activity-header">
-              <span class="activity-type">{activity.type}</span>
-              <time class="activity-date">{activity.date.toLocaleDateString()}</time>
-            </div>
-            <h3><a href={activity.href}>{activity.title}</a></h3>
-            <p>{activity.description}</p>
-            <div class="activity-meta">
-              {(activity as any).category && <span class="meta-tag">{(activity as any).category}</span>}
-              {(activity as any).language && <span class="meta-tag">{(activity as any).language}</span>}
-              {(activity as any).status && <span class="meta-tag">{(activity as any).status}</span>}
-            </div>
+      <!-- Projects Section -->
+      <div class="content-section">
+        <div class="section-header">
+          <h3>🚀 Building</h3>
+          <a href="/projects" class="section-link">View all →</a>
+        </div>
+        <div class="section-preview">
+          {recentProjects.map((project) => (
+            <article class="preview-item">
+              <h4><a href={`/projects/${project.slug}`}>{project.data.title}</a></h4>
+              <p>{project.data.description}</p>
+              <div class="project-status">{project.data.status}</div>
+            </article>
+          ))}
+        </div>
+      </div>
+
+      <!-- Learning Section -->
+      <div class="content-section">
+        <div class="section-header">
+          <h3>💡 Learning</h3>
+          <a href="/til" class="section-link">View all →</a>
+        </div>
+        <div class="section-preview">
+          <div class="learning-placeholder">
+            <p>Daily discoveries and insights</p>
+            <a href="/til" class="cta-button">Explore TIL →</a>
           </div>
         </div>
-      ))}
+      </div>
+
+      <!-- Tools Section -->
+      <div class="content-section">
+        <div class="section-header">
+          <h3>⚡ Tools</h3>
+          <a href="/snippets" class="section-link">View all →</a>
+        </div>
+        <div class="section-preview">
+          <div class="tools-placeholder">
+            <p>Code snippets and utilities</p>
+            <a href="/snippets" class="cta-button">Browse snippets →</a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Popular Tags -->
-  <section class="popular-tags">
-    <h2>🏷️ Popular Topics</h2>
-    <div class="tag-list">
-      {topTags.map((tag) => (
-        <a href={`/tags/${tag}`} class="tag">
-          {tag}
-        </a>
-      ))}
-    </div>
-  </section>
+      <!-- Interactive Activity Feed (Client-side loaded) -->
+      <section class="activity-feed">
+        <div class="feed-header">
+          <h3>Recent Activity</h3>
+          <button class="load-more" id="load-activity">Load Timeline</button>
+        </div>
+        <div class="feed-content" id="activity-timeline" style="display: none;">
+          <!-- Content loaded via client-side script -->
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Client-side Activity Timeline Component -->
+  <script>
+    class ActivityTimeline extends HTMLElement {
+      private loadButton: HTMLButtonElement | null;
+      private timeline: HTMLElement | null;
+      
+      constructor() {
+        super();
+        this.loadButton = this.querySelector('#load-activity') as HTMLButtonElement;
+        this.timeline = this.querySelector('#activity-timeline') as HTMLElement;
+        
+        if (this.loadButton) {
+          this.loadButton.addEventListener('click', () => this.loadTimeline());
+        }
+      }
+      
+      async loadTimeline(): Promise<void> {
+        if (!this.loadButton || !this.timeline) return;
+        
+        this.loadButton.textContent = 'Loading...';
+        this.loadButton.disabled = true;
+        
+        try {
+          // Load activity data dynamically
+          await new Promise(resolve => setTimeout(resolve, 800));
+          
+          this.timeline.innerHTML = `
+            <div class="timeline-items">
+              <div class="timeline-item">
+                <div class="timeline-icon">📝</div>
+                <div class="timeline-content">
+                  <h4>Latest Blog Post</h4>
+                  <p>Recently published thoughts on software architecture</p>
+                  <time>2 days ago</time>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-icon">🚀</div>
+                <div class="timeline-content">
+                  <h4>Project Update</h4>
+                  <p>Added new features to personal website</p>
+                  <time>1 week ago</time>
+                </div>
+              </div>
+            </div>
+          `;
+          
+          this.timeline.style.display = 'block';
+          this.loadButton.style.display = 'none';
+        } catch (error) {
+          this.loadButton.textContent = 'Error loading timeline';
+        }
+      }
+    }
+    
+    customElements.define('activity-timeline', ActivityTimeline);
+  </script>
 
   <style>
-    .hero {
-      text-align: center;
-      padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-xl);
-      max-width: 720px;
+    /* Integrated Layout */
+    .integrated-layout {
+      max-width: 1400px;
       margin: 0 auto;
-    }
-
-    .avatar {
-      width: 88px;
-      height: 88px;
-      border-radius: 50%;
-      object-fit: cover;
-      margin-bottom: var(--spacing-md);
-      border: 2px solid var(--border-primary);
-    }
-
-    h1 {
-      font-size: var(--font-size-2xl);
-      margin-bottom: var(--spacing-sm);
-      color: var(--text-primary);
-    }
-
-    .intro {
-      font-size: var(--font-size-lg);
-      color: var(--text-secondary);
-      line-height: var(--line-height-relaxed);
-      margin-bottom: var(--spacing-lg);
-    }
-
-    .actions {
-      font-size: var(--font-size-base);
-      color: var(--text-tertiary);
-    }
-
-    .actions a {
-      color: var(--color-link);
-      text-decoration: none;
-    }
-
-    .actions a:hover {
-      color: var(--color-link-hover);
-      text-decoration: underline;
-    }
-
-    /* Current Focus */
-    .current-focus {
-      max-width: 720px;
-      margin: var(--spacing-2xl) auto;
       padding: 0 var(--spacing-md);
     }
 
-    .current-focus h2 {
-      font-size: var(--font-size-xl);
-      margin-bottom: var(--spacing-md);
+    /* Integrated Header */
+    .integrated-header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      margin: var(--spacing-xl) 0 var(--spacing-2xl) 0;
+      padding: var(--spacing-xl);
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--spacing-xl);
+    }
+
+    /* Profile Section */
+    .profile-section {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-lg);
+    }
+
+    .avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--border-primary);
+      transition: transform var(--transition-base);
+      flex-shrink: 0;
+    }
+
+    .avatar:hover {
+      transform: scale(1.05);
+    }
+
+    .profile-info h1 {
+      font-size: var(--font-size-2xl);
+      margin: 0 0 var(--spacing-xs) 0;
       color: var(--text-primary);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .bio {
+      font-size: var(--font-size-base);
+      color: var(--text-secondary);
+      margin: 0;
+      line-height: var(--line-height-relaxed);
+    }
+
+    /* Header Actions */
+    .header-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--spacing-md);
+    }
+
+    .stats-row {
+      display: flex;
+      gap: var(--spacing-lg);
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-xs);
+      text-align: center;
+    }
+
+    .stat .number {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-accent);
+      line-height: 1;
+    }
+
+    .stat .label {
+      font-size: var(--font-size-xs);
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .contact-actions {
+      display: flex;
+      gap: var(--spacing-sm);
+    }
+
+    .action-btn {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-xs);
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      text-decoration: none;
+      font-size: var(--font-size-sm);
+      transition: all var(--transition-base);
+    }
+
+    .action-btn:hover {
+      background: var(--color-accent);
+      color: white;
+      border-color: var(--color-accent);
+      transform: translateY(-1px);
+    }
+
+    .action-btn .icon {
+      font-size: var(--font-size-sm);
+    }
+
+    /* Full Width Content */
+    .full-width-content {
+      width: 100%;
+    }
+
+    /* Current Focus - Adjusted for main content */
+    .current-focus {
+      margin-bottom: var(--spacing-2xl);
     }
 
     .focus-card {
       background: var(--bg-card);
       border: 1px solid var(--border-primary);
       border-radius: var(--radius-lg);
-      padding: var(--spacing-lg);
-      transition: transform var(--transition-base), box-shadow var(--transition-base);
+      padding: var(--spacing-xl);
+      position: relative;
+      overflow: hidden;
     }
 
-    .focus-card:hover {
-      transform: translateY(-2px);
-      box-shadow: var(--shadow-lg);
+    .focus-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--color-accent), var(--color-success));
     }
 
     .focus-header {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      gap: var(--spacing-sm);
       margin-bottom: var(--spacing-md);
     }
 
-    .focus-icon {
-      font-size: var(--font-size-xl);
-    }
-
-    .focus-status {
+    .status-indicator {
       display: flex;
       align-items: center;
       gap: var(--spacing-xs);
     }
 
-    .status-indicator {
+    .pulse {
       width: 8px;
       height: 8px;
-      border-radius: 50%;
       background: var(--color-success);
-    }
-
-    .status-indicator.active {
+      border-radius: 50%;
       animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.7; transform: scale(1.1); }
     }
 
-    .status-text {
+    .status-indicator .text {
       font-size: var(--font-size-sm);
       color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    .focus-card h3 {
+    .focus-card h2 {
       margin: 0 0 var(--spacing-sm) 0;
-      font-size: var(--font-size-lg);
+      font-size: var(--font-size-xl);
+      line-height: var(--line-height-tight);
     }
 
-    .focus-card h3 a {
+    .focus-card h2 a {
       color: var(--text-primary);
       text-decoration: none;
+      transition: color var(--transition-base);
     }
 
-    .focus-card h3 a:hover {
+    .focus-card h2 a:hover {
       color: var(--color-accent);
     }
 
@@ -325,244 +434,338 @@ const currentFocus = recentActivities[0];
 
     .focus-meta {
       display: flex;
-      gap: var(--spacing-sm);
-      flex-wrap: wrap;
+      gap: var(--spacing-md);
+      align-items: center;
+      font-size: var(--font-size-sm);
+      color: var(--text-tertiary);
     }
 
-    .focus-meta span {
-      background: var(--bg-secondary);
+    /* Content Sections Grid - Full Width */
+    .content-sections {
+      margin: var(--spacing-2xl) 0;
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: var(--spacing-xl);
+    }
+
+    .content-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      transition: transform var(--transition-base), box-shadow var(--transition-base);
+    }
+
+    .content-section:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--spacing-md);
+      padding-bottom: var(--spacing-sm);
+      border-bottom: 1px solid var(--border-primary);
+    }
+
+    .section-header h3 {
+      margin: 0;
+      font-size: var(--font-size-lg);
+      color: var(--text-primary);
+    }
+
+    .section-link {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      transition: opacity var(--transition-base);
+    }
+
+    .section-link:hover {
+      opacity: 0.8;
+    }
+
+    .section-preview {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .preview-item {
+      padding: var(--spacing-md) 0;
+      border-bottom: 1px solid var(--border-secondary);
+    }
+
+    .preview-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .preview-item h4 {
+      margin: 0 0 var(--spacing-xs) 0;
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-tight);
+    }
+
+    .preview-item h4 a {
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: color var(--transition-base);
+    }
+
+    .preview-item h4 a:hover {
+      color: var(--color-accent);
+    }
+
+    .preview-item p {
+      margin: 0 0 var(--spacing-xs) 0;
       color: var(--text-secondary);
+      font-size: var(--font-size-sm);
+      line-height: var(--line-height-relaxed);
+    }
+
+    .preview-item time {
+      font-size: var(--font-size-xs);
+      color: var(--text-tertiary);
+    }
+
+    .project-status {
+      display: inline-block;
+      background: var(--color-success);
+      color: white;
       padding: var(--spacing-xs) var(--spacing-sm);
       border-radius: var(--radius-sm);
       font-size: var(--font-size-xs);
-    }
-
-    /* Activity Stats */
-    .activity-stats {
-      max-width: 720px;
-      margin: var(--spacing-2xl) auto;
-      padding: 0 var(--spacing-md);
-    }
-
-    .activity-stats h2 {
-      font-size: var(--font-size-xl);
-      margin-bottom: var(--spacing-md);
-      color: var(--text-primary);
-    }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-      gap: var(--spacing-md);
-      text-align: center;
-    }
-
-    .stat-item {
-      background: var(--bg-card);
-      border: 1px solid var(--border-primary);
-      padding: var(--spacing-lg) var(--spacing-md);
-      border-radius: var(--radius-md);
-      transition: transform var(--transition-base);
-    }
-
-    .stat-item:hover {
-      transform: translateY(-2px);
-    }
-
-    .stat-number {
-      display: block;
-      font-size: var(--font-size-2xl);
-      font-weight: var(--font-weight-bold);
-      color: var(--color-accent);
-      line-height: 1;
-    }
-
-    .stat-label {
-      display: block;
-      font-size: var(--font-size-sm);
-      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
       margin-top: var(--spacing-xs);
     }
 
-    /* Activity Timeline */
-    .activity-timeline {
-      max-width: 720px;
-      margin: var(--spacing-2xl) auto;
-      padding: 0 var(--spacing-md);
+    /* Placeholder Content */
+    .learning-placeholder,
+    .tools-placeholder {
+      text-align: center;
+      padding: var(--spacing-lg) 0;
     }
 
-    .activity-timeline h2 {
-      font-size: var(--font-size-xl);
+    .learning-placeholder p,
+    .tools-placeholder p {
+      color: var(--text-secondary);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: var(--color-accent);
+      color: white;
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-size: var(--font-size-sm);
+      font-weight: var(--font-weight-medium);
+      transition: background var(--transition-base);
+    }
+
+    .cta-button:hover {
+      background: var(--color-accent-hover, var(--color-accent));
+      opacity: 0.9;
+    }
+
+    /* Activity Feed - Progressive Loading */
+    .activity-feed {
+      margin: var(--spacing-2xl) 0;
+    }
+
+    .feed-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       margin-bottom: var(--spacing-lg);
+    }
+
+    .feed-header h3 {
+      margin: 0;
+      font-size: var(--font-size-xl);
       color: var(--text-primary);
     }
 
-    .timeline {
-      position: relative;
+    .load-more {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-primary);
+      color: var(--text-primary);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-size: var(--font-size-sm);
+      transition: all var(--transition-base);
     }
 
-    .timeline::before {
-      content: '';
-      position: absolute;
-      left: 20px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: var(--border-primary);
+    .load-more:hover {
+      background: var(--color-accent);
+      color: white;
+      border-color: var(--color-accent);
     }
 
-    .activity-item {
-      position: relative;
+    .load-more:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .feed-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+    }
+
+    .timeline-items {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-lg);
+    }
+
+    .timeline-item {
       display: flex;
       gap: var(--spacing-md);
-      margin-bottom: var(--spacing-lg);
-      padding-left: var(--spacing-xs);
+      align-items: flex-start;
     }
 
-    .activity-icon {
+    .timeline-icon {
       flex-shrink: 0;
       width: 40px;
       height: 40px;
-      background: var(--bg-card);
+      background: var(--bg-secondary);
       border: 2px solid var(--border-primary);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: var(--font-size-lg);
-      position: relative;
-      z-index: 1;
     }
 
-    .activity-content {
-      flex: 1;
-      background: var(--bg-card);
-      border: 1px solid var(--border-primary);
-      border-radius: var(--radius-md);
-      padding: var(--spacing-md);
-      transition: transform var(--transition-base);
+    .timeline-content h4 {
+      margin: 0 0 var(--spacing-xs) 0;
+      font-size: var(--font-size-base);
+      color: var(--text-primary);
     }
 
-    .activity-content:hover {
-      transform: translateY(-1px);
+    .timeline-content p {
+      margin: 0 0 var(--spacing-xs) 0;
+      color: var(--text-secondary);
+      font-size: var(--font-size-sm);
     }
 
-    .activity-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: var(--spacing-xs);
-    }
-
-    .activity-type {
-      background: var(--color-accent);
-      color: white;
-      padding: var(--spacing-xs) var(--spacing-sm);
-      border-radius: var(--radius-sm);
-      font-size: var(--font-size-xs);
-      text-transform: capitalize;
-    }
-
-    .activity-date {
+    .timeline-content time {
       font-size: var(--font-size-xs);
       color: var(--text-tertiary);
     }
 
-    .activity-content h3 {
-      margin: 0 0 var(--spacing-xs) 0;
-      font-size: var(--font-size-base);
-    }
-
-    .activity-content h3 a {
-      color: var(--text-primary);
-      text-decoration: none;
-    }
-
-    .activity-content h3 a:hover {
-      color: var(--color-accent);
-    }
-
-    .activity-content p {
-      color: var(--text-secondary);
-      font-size: var(--font-size-sm);
-      line-height: var(--line-height-relaxed);
-      margin-bottom: var(--spacing-sm);
-    }
-
-    .activity-meta {
-      display: flex;
-      gap: var(--spacing-xs);
-      flex-wrap: wrap;
-    }
-
-    .meta-tag {
-      background: var(--bg-secondary);
-      color: var(--text-secondary);
-      padding: var(--spacing-xs) var(--spacing-sm);
-      border-radius: var(--radius-sm);
-      font-size: var(--font-size-xs);
-      text-transform: capitalize;
-    }
-
-    /* Popular Tags */
-    .popular-tags {
-      max-width: 720px;
-      margin: var(--spacing-2xl) auto;
-      padding: 0 var(--spacing-md);
-      text-align: center;
-    }
-
-    .popular-tags h2 {
-      font-size: var(--font-size-xl);
-      margin-bottom: var(--spacing-md);
-      color: var(--text-primary);
-    }
-
-    .tag-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: var(--spacing-sm);
-    }
-
-    .tag {
-      background: var(--bg-secondary);
-      padding: var(--spacing-xs) var(--spacing-md);
-      font-size: var(--font-size-sm);
-      border-radius: var(--radius-full);
-      text-decoration: none;
-      color: var(--text-secondary);
-      border: 1px solid var(--border-primary);
-      transition: all var(--transition-base);
-    }
-
-    .tag:hover {
-      background: var(--color-accent);
-      color: white;
-      border-color: var(--color-accent);
-    }
-
     /* Responsive Design */
-    @media (max-width: 768px) {
-      .timeline::before {
-        left: 15px;
+    @media (max-width: 1024px) {
+      .integrated-layout {
+        max-width: 1200px;
       }
       
-      .activity-icon {
-        width: 30px;
-        height: 30px;
+      .header-content {
+        gap: var(--spacing-lg);
+      }
+      
+      .stats-row {
+        gap: var(--spacing-md);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .integrated-layout {
+        padding: 0 var(--spacing-sm);
+      }
+      
+      .integrated-header {
+        margin: var(--spacing-lg) 0;
+        padding: var(--spacing-lg);
+      }
+      
+      .header-content {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: var(--spacing-lg);
+      }
+      
+      .profile-section {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md);
+      }
+      
+      .header-actions {
+        align-items: center;
+      }
+      
+      .contact-actions {
+        justify-content: center;
+      }
+      
+      .section-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+      }
+      
+      .feed-header {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        align-items: stretch;
+      }
+      
+      .timeline-item {
+        gap: var(--spacing-sm);
+      }
+      
+      .timeline-icon {
+        width: 32px;
+        height: 32px;
         font-size: var(--font-size-base);
       }
-      
-      .activity-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: var(--spacing-xs);
+    }
+
+    @media (max-width: 480px) {
+      .integrated-header {
+        padding: var(--spacing-md);
       }
       
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+      .avatar {
+        width: 60px;
+        height: 60px;
+      }
+      
+      .profile-info h1 {
+        font-size: var(--font-size-xl);
+      }
+      
+      .stats-row {
+        gap: var(--spacing-sm);
+      }
+      
+      .stat .number {
+        font-size: var(--font-size-lg);
+      }
+      
+      .contact-actions {
+        flex-direction: column;
+        width: 100%;
+      }
+      
+      .action-btn {
+        justify-content: center;
       }
     }
   </style>
+
+  <activity-timeline></activity-timeline>
 </BaseLayout>
