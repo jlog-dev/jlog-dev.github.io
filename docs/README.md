@@ -10,13 +10,17 @@ Welcome to the centralized documentation for the JLog website project. This fold
 ### 🎨 Design System
 - **[THEME_ORGANIZATION.md](./THEME_ORGANIZATION.md)** - Theme system architecture, CSS organization, and usage guidelines
 
+### 🚀 Development Roadmap
+- **[WEBSITE_IMPROVEMENTS.md](./WEBSITE_IMPROVEMENTS.md)** - Comprehensive improvement roadmap leveraging modern web development practices and Astro's full potential
+
 ## 🗂️ Documentation Structure
 
 ```
 docs/
 ├── README.md                 # This index file
 ├── PROJECT_INFO.md          # Complete project documentation
-└── THEME_ORGANIZATION.md    # Theme system documentation
+├── THEME_ORGANIZATION.md    # Theme system documentation
+└── WEBSITE_IMPROVEMENTS.md  # Development roadmap and improvements
 ```
 
 ## 🚀 Quick Start

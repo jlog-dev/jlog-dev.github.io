@@ -1,33 +1,47 @@
-# Astro Starter Kit: Minimal
+# JLog - Personal Blog & Portfolio
 
-```sh
-npm create astro@latest -- --template minimal
-```
+A modern personal website built with Astro, featuring bilingual content, a centralized theme system, and optimized performance.
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+🌐 **Live Site**: [jlog-dev.github.io](https://jlog-dev.github.io)
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## ✨ Features
 
-## 🚀 Project Structure
+- 📝 **Bilingual Blog** - Content in English and Chinese
+- 🏷️ **Tag System** - Organized content categorization
+- 🌙 **Dark Mode** - Seamless theme switching
+- 🎨 **Centralized Theme System** - Semantic CSS variables and design tokens
+- ⚡ **Optimized Performance** - Static generation with Astro
+- 📱 **Responsive Design** - Mobile-first approach
+- 🔍 **SEO Optimized** - Meta tags, sitemap, and structured data
 
-Inside of your Astro project, you'll see the following folders and files:
+## 📚 Documentation
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+For comprehensive project documentation, please visit the [`docs/`](./docs/) folder:
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+- **[Project Overview](./docs/PROJECT_INFO.md)** - Complete project information and architecture
+- **[Theme System](./docs/THEME_ORGANIZATION.md)** - CSS organization and design system
+- **[Improvement Roadmap](./docs/WEBSITE_IMPROVEMENTS.md)** - Future enhancements and development plan
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+## 🚀 Quick Start
 
-Any static assets, like images, can be placed in the `public/` directory.
+1. **Clone and Install**
+   ```bash
+   git clone https://github.com/jlog-dev/jlog-dev.github.io.git
+   cd jlog-dev.github.io
+   npm install
+   ```
+
+2. **Development**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:4321](http://localhost:4321) to view the site.
+
+3. **Build for Production**
+   ```bash
+   npm run build
+   npm run preview
+   ```
 
 ## 🧞 Commands
 
@@ -42,6 +56,18 @@ All commands are run from the root of the project, from a terminal:
 | `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
 | `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## 🛠️ Tech Stack
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- **[Astro](https://astro.build)** - Static site generator
+- **TypeScript** - Type-safe development
+- **CSS3** - Modern styling with custom properties
+- **Markdown/MDX** - Content authoring
+- **GitHub Pages** - Deployment and hosting
+
+## 🤝 Contributing
+
+This is a personal website project. For detailed development information, please refer to the documentation in the [`docs/`](./docs/) folder.
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
