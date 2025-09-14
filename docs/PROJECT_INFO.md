@@ -18,6 +18,10 @@ JLog is a personal digital logbook where I share what I build, learn, and think.
 - **Bilingual Support**: Content in both English and Chinese
 - **Blog System**: Technical articles, tutorials, and personal reflections
 - **Project Showcase**: Portfolio with tech stack and repository links
+- **Code Snippets**: Reusable code examples with syntax highlighting
+- **AI Prompts**: Curated collection of effective AI prompts for various tasks
+- **TIL (Today I Learned)**: Quick notes and discoveries from daily learning
+- **Bookmarks**: Curated links to useful resources and articles
 - **Tag System**: Categorization and filtering by topics
 - **Featured Posts**: Highlighted content on homepage
 - **Table of Contents**: Auto-generated for blog posts
@@ -89,6 +93,10 @@ jlog-dev.github.io/
 │   ├── content/                 # Content collections
 │   │   ├── blog/                # Blog posts (16 articles)
 │   │   ├── projects/            # Project showcases
+│   │   ├── snippets/            # Code snippets collection
+│   │   ├── prompts/             # AI prompts collection
+│   │   ├── til/                 # Today I Learned posts
+│   │   ├── bookmarks/           # Curated bookmarks
 │   │   └── config.ts            # Content schema definitions
 │   ├── layouts/                 # Page templates
 │   │   ├── BaseLayout.astro     # Main page template
@@ -97,6 +105,10 @@ jlog-dev.github.io/
 │   ├── pages/                   # File-based routing
 │   │   ├── blog/                # Blog listing & individual posts
 │   │   ├── projects/            # Projects listing & individual projects
+│   │   ├── snippets/            # Code snippets listing & individual snippets
+│   │   ├── prompts/             # AI prompts listing & individual prompts
+│   │   ├── til/                 # TIL posts listing & individual posts
+│   │   ├── bookmarks/           # Bookmarks listing & individual bookmarks
 │   │   ├── tags/                # Tag-based filtering
 │   │   ├── about.astro          # About page
 │   │   └── index.astro          # Homepage
@@ -105,7 +117,8 @@ jlog-dev.github.io/
 │   │   ├── components.css       # Component-specific styles
 │   │   └── global.css           # Global styles and imports
 │   └── utils/
-│       └── consts.ts            # Site constants and configuration
+│       ├── consts.ts            # Site constants and configuration
+│       └── content.ts           # Content utility functions
 ├── astro.config.mjs             # Astro configuration
 ├── package.json                 # Dependencies and scripts
 ├── tsconfig.json                # TypeScript configuration
@@ -127,10 +140,13 @@ jlog-dev.github.io/
   - Technical and philosophical posts in Chinese
 - **Mixed Languages**: Bilingual content strategy
 
-### Project Showcases
-- **Portfolio Projects**: Technical projects with live demos
-- **Tech Stack Documentation**: Detailed technology breakdowns
-- **Repository Links**: Direct links to source code
+### Content Collections
+- **Project Showcases**: Technical projects with live demos and source code
+- **Code Snippets**: Reusable code examples with language-specific categorization
+- **AI Prompts**: Curated prompts for coding, writing, analysis, and creative tasks
+- **TIL Posts**: Quick learning notes and discoveries
+- **Bookmarks**: Curated resources with ratings and personal notes
+- **Comprehensive Tagging**: Cross-collection tag system for content discovery
 
 ## 🎯 Target Audience
 
@@ -152,8 +168,12 @@ npm run preview     # Preview production build
 ### Content Creation
 1. **Blog Posts**: Add Markdown files to `src/content/blog/`
 2. **Projects**: Add MDX files to `src/content/projects/`
-3. **Assets**: Place images in `public/` directory
-4. **Metadata**: Update frontmatter with title, date, tags, etc.
+3. **Code Snippets**: Add Markdown files to `src/content/snippets/`
+4. **AI Prompts**: Add Markdown files to `src/content/prompts/`
+5. **TIL Posts**: Add Markdown files to `src/content/til/`
+6. **Bookmarks**: Add Markdown files to `src/content/bookmarks/`
+7. **Assets**: Place images in `public/` directory
+8. **Metadata**: Update frontmatter with title, date, tags, and collection-specific fields
 
 ### Deployment
 - **Automatic**: Push to `main` branch triggers GitHub Actions
@@ -169,10 +189,13 @@ npm run preview     # Preview production build
 - **Component Library**: Reusable styled components
 
 ### Content Features
-- **Frontmatter**: Rich metadata for posts and projects
+- **Rich Schemas**: Type-safe content with comprehensive metadata
 - **Code Highlighting**: Syntax highlighting for multiple languages
-- **Navigation**: Previous/next post navigation
-- **Search**: Tag-based content discovery
+- **Cross-Collection Search**: Unified search across all content types
+- **Related Content**: Automatic suggestions based on tags and topics
+- **Reading Time**: Calculated reading time for all content
+- **Effectiveness Ratings**: Star ratings for AI prompts and bookmarks
+- **Multi-format Support**: Markdown, MDX, and data collections
 
 ### Performance
 - **Static Generation**: Pre-built pages for optimal loading
@@ -206,5 +229,5 @@ This project is open source and available under standard web development practic
 
 ---
 
-*Last updated: September 2025*
+*Last updated: September 2025 - Added AI Prompts, Code Snippets, TIL, and Bookmarks collections*
 *Built with ❤️ using Astro and modern web technologies*
