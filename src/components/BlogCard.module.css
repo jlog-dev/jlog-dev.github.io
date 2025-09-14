@@ -1,15 +1,18 @@
 .card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 1rem 1.2rem;
-  margin-bottom: 1.5rem;
-  transition: box-shadow 0.2s ease, border-color 0.2s ease, background 0.3s ease;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-md) var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  transition: 
+    box-shadow var(--transition-base), 
+    border-color var(--transition-base), 
+    background var(--transition-slow);
 }
 
 .card:hover {
-  border-color: var(--link-color);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  border-color: var(--color-link);
+  box-shadow: var(--shadow-md);
 }
 
 .link {
@@ -19,19 +22,20 @@
 }
 
 h2 {
-  margin: 0 0 0.5rem;
-  font-size: 1.15rem;
-  color: var(--text);
+  margin: 0 0 var(--spacing-sm);
+  font-size: var(--font-size-xl);
+  color: var(--text-primary);
+  font-weight: var(--font-weight-medium);
 }
 
 p {
-  margin: 0 0 0.75rem;
-  color: var(--subtle-text);
-  font-size: 0.95rem;
-  line-height: 1.5;
+  margin: 0 0 var(--spacing-sm);
+  color: var(--text-secondary);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-tight);
 }
 
 time {
-  font-size: 0.8rem;
-  color: var(--meta-text);
+  font-size: var(--font-size-xs);
+  color: var(--text-meta);
 }

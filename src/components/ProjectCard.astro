@@ -21,18 +21,18 @@ const { name, description, href, tech = [] } = Astro.props;
 
 <style>
   .card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 1.25rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-lg);
     transition:
-      box-shadow 0.2s ease,
-      transform 0.15s ease,
-      background 0.3s ease;
+      box-shadow var(--transition-base),
+      transform var(--transition-fast),
+      background var(--transition-slow);
   }
 
   .card:hover {
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    box-shadow: var(--shadow-lg);
     transform: translateY(-3px);
   }
 
@@ -43,28 +43,30 @@ const { name, description, href, tech = [] } = Astro.props;
   }
 
   h2 {
-    font-size: 1.2rem;
-    margin: 0 0 0.5rem;
-    color: var(--link-color);
+    font-size: var(--font-size-xl);
+    margin: 0 0 var(--spacing-sm);
+    color: var(--color-link);
+    font-weight: var(--font-weight-medium);
   }
 
   .desc {
-    font-size: 0.95rem;
-    margin-bottom: 0.75rem;
-    color: var(--subtle-text);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-sm);
+    color: var(--text-secondary);
+    line-height: var(--line-height-base);
   }
 
   .tech-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.4rem;
+    gap: var(--spacing-xs);
   }
 
   .tech {
     background: var(--tag-bg);
-    font-size: 0.75rem;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    color: var(--tag-color);
+    font-size: var(--font-size-xs);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    color: var(--tag-text);
   }
 </style>

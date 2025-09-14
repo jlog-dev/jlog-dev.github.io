@@ -25,53 +25,59 @@ const navLinks = [
 
 <style>
   .site-header {
-    padding: 1rem 2rem;
+    padding: var(--spacing-md) var(--spacing-xl);
     display: flex;
     justify-content: center;
-    background: var(--bg);
-    color: var(--text);
-    border-bottom: 1px solid var(--border);
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border-primary);
   }
 
   nav {
     width: 100%;
-    max-width: 960px;
+    max-width: var(--container-wide-max-width);
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
 
   .logo {
-    font-weight: bold;
-    font-size: 1.2rem;
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl);
     text-decoration: none;
-    color: var(--text);
+    color: var(--text-primary);
   }
 
   .nav-links {
     list-style: none;
     display: flex;
-    gap: 1.2rem;
+    gap: var(--spacing-lg);
     margin: 0;
     padding: 0;
   }
 
   .nav-links a {
     text-decoration: none;
-    color: var(--text);
-    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-size: var(--font-size-base);
+    transition: color var(--transition-base);
   }
 
   .nav-links a:hover {
-    color: var(--link-color);
+    color: var(--color-link);
   }
 
   #theme-toggle {
     background: none;
     border: none;
-    font-size: 1.25rem;
+    font-size: var(--font-size-xl);
     cursor: pointer;
-    color: var(--text);
+    color: var(--text-primary);
+    transition: color var(--transition-base);
+  }
+
+  #theme-toggle:hover {
+    color: var(--color-link);
   }
 </style>
 

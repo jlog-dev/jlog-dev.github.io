@@ -1,0 +1,265 @@
+/* ============================
+   🎨 Centralized Theme System
+   ============================ */
+
+/* ============================
+   Base Theme Variables
+   ============================ */
+:root {
+  /* ===== Colors ===== */
+  /* Background Colors */
+  --bg-primary: #ffffff;
+  --bg-secondary: #fafafa;
+  --bg-tertiary: #f9f9f9;
+  --bg-card: #ffffff;
+  --bg-footer: #fafafa;
+  --bg-code: #f4f4f4;
+  --bg-toc: #f9f9f9;
+  
+  /* Text Colors */
+  --text-primary: #222222;
+  --text-secondary: #555555;
+  --text-tertiary: #888888;
+  --text-heading: #111111;
+  --text-meta: #888888;
+  --text-code: #111111;
+  --text-toc: #333333;
+  
+  /* Interactive Colors */
+  --color-accent: #0070f3;
+  --color-link: #0070f3;
+  --color-link-hover: #0056b3;
+  
+  /* Border Colors */
+  --border-primary: #e5e7eb;
+  --border-secondary: #d1d5db;
+  --border-avatar: #cccccc;
+  
+  /* Button Colors */
+  --button-bg: #0070f3;
+  --button-text: #ffffff;
+  --button-hover-bg: #0056b3;
+  
+  /* Tag Colors */
+  --tag-bg: #f0f2f4;
+  --tag-text: #333333;
+  --tag-hover-bg: #0070f3;
+  --tag-hover-text: #ffffff;
+  
+  /* Icon Colors */
+  --icon-color: #555555;
+  --icon-hover-color: #0070f3;
+  
+  /* ===== Spacing ===== */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-2xl: 3rem;
+  --spacing-3xl: 4rem;
+  
+  /* ===== Typography ===== */
+  --font-family-base: system-ui, -apple-system, sans-serif;
+  --font-family-mono: ui-monospace, SFMono-Regular, 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.85rem;
+  --font-size-base: 0.95rem;
+  --font-size-lg: 1.05rem;
+  --font-size-xl: 1.15rem;
+  --font-size-2xl: 1.3rem;
+  --font-size-3xl: 2rem;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  
+  --line-height-tight: 1.5;
+  --line-height-base: 1.6;
+  --line-height-relaxed: 1.7;
+  
+  /* ===== Border Radius ===== */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
+  --radius-full: 9999px;
+  
+  /* ===== Shadows ===== */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 4px 14px rgba(0, 0, 0, 0.05);
+  
+  /* ===== Transitions ===== */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+  
+  /* ===== Layout ===== */
+  --container-max-width: 720px;
+  --container-wide-max-width: 960px;
+}
+
+/* ============================
+   Dark Theme Overrides
+   ============================ */
+html.dark {
+  /* Background Colors */
+  --bg-primary: #121212;
+  --bg-secondary: #181818;
+  --bg-tertiary: #1e1e1e;
+  --bg-card: #1e1e1e;
+  --bg-footer: #181818;
+  --bg-code: #1a1a1a;
+  --bg-toc: #1e1e1e;
+  
+  /* Text Colors */
+  --text-primary: #eaeaea;
+  --text-secondary: #aaaaaa;
+  --text-tertiary: #777777;
+  --text-heading: #ffffff;
+  --text-meta: #777777;
+  --text-code: #dddddd;
+  --text-toc: #cccccc;
+  
+  /* Interactive Colors */
+  --color-accent: #70a8ff;
+  --color-link: #70a8ff;
+  --color-link-hover: #5a8cdb;
+  
+  /* Border Colors */
+  --border-primary: #333333;
+  --border-secondary: #444444;
+  --border-avatar: #444444;
+  
+  /* Button Colors */
+  --button-bg: #444444;
+  --button-text: #ffffff;
+  --button-hover-bg: #555555;
+  
+  /* Tag Colors */
+  --tag-bg: #2a2a2a;
+  --tag-text: #dddddd;
+  --tag-hover-bg: #70a8ff;
+  --tag-hover-text: #000000;
+  
+  /* Icon Colors */
+  --icon-color: #aaaaaa;
+  --icon-hover-color: #70a8ff;
+  
+  /* Shadows (adjusted for dark theme) */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 2px 10px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================
+   Legacy Variable Aliases
+   (for backward compatibility)
+   ============================ */
+:root {
+  /* Old variable names mapped to new system */
+  --bg: var(--bg-primary);
+  --text: var(--text-primary);
+  --heading: var(--text-heading);
+  --border: var(--border-primary);
+  --link-color: var(--color-link);
+  --card-bg: var(--bg-card);
+  --subtle-text: var(--text-secondary);
+  --meta-text: var(--text-tertiary);
+  --footer-bg: var(--bg-footer);
+  --icon-color: var(--icon-color);
+  --avatar-border: var(--border-avatar);
+  --tag-bg: var(--tag-bg);
+  --tag-hover-bg: var(--tag-hover-bg);
+  --tag-color: var(--tag-text);
+  --tag-hover-color: var(--tag-hover-text);
+  --button-bg: var(--button-bg);
+  --button-text: var(--button-text);
+  --pre-bg: var(--bg-code);
+  --code-text: var(--text-code);
+  --toc-bg: var(--bg-toc);
+  --toc-text: var(--text-toc);
+  --accent: var(--color-accent);
+}
+
+/* ============================
+   Component-Specific Mixins
+   ============================ */
+
+/* Card Component Styles */
+.theme-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  transition: 
+    box-shadow var(--transition-base),
+    border-color var(--transition-base),
+    background var(--transition-slow);
+}
+
+.theme-card:hover {
+  border-color: var(--color-link);
+  box-shadow: var(--shadow-md);
+}
+
+/* Button Component Styles */
+.theme-button {
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--button-bg);
+  color: var(--button-text);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  transition: background var(--transition-base);
+}
+
+.theme-button:hover {
+  background: var(--button-hover-bg);
+}
+
+/* Tag Component Styles */
+.theme-tag {
+  background: var(--tag-bg);
+  color: var(--tag-text);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-sm);
+  border-radius: var(--radius-full);
+  text-decoration: none;
+  transition: 
+    background var(--transition-base),
+    color var(--transition-base);
+}
+
+.theme-tag:hover {
+  background: var(--tag-hover-bg);
+  color: var(--tag-hover-text);
+}
+
+/* Link Component Styles */
+.theme-link {
+  color: var(--color-link);
+  text-decoration: none;
+  transition: color var(--transition-base);
+}
+
+.theme-link:hover {
+  color: var(--color-link-hover);
+  text-decoration: underline;
+}
+
+/* Container Component Styles */
+.theme-container {
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.theme-container-wide {
+  max-width: var(--container-wide-max-width);
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
