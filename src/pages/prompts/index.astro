@@ -1,0 +1,215 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getAllPrompts, formatDate } from "../../utils/content";
+
+const prompts = await getAllPrompts();
+---
+
+<BaseLayout title="AI Prompts">
+  <div class="container">
+    <header class="page-header">
+      <h1>🤖 AI Prompts</h1>
+      <p>Curated collection of effective AI prompts for various tasks and use cases.</p>
+    </header>
+
+    <div class="prompts-grid">
+      {prompts.map((prompt) => (
+        <article class="prompt-card">
+          <h2>
+            <a href={`/prompts/${prompt.slug}`}>{prompt.data.title}</a>
+          </h2>
+          <p class="description">{prompt.data.description}</p>
+          
+          <div class="prompt-meta">
+            <span class="category">{prompt.data.category}</span>
+            <span class="model">{prompt.data.model}</span>
+            {prompt.data.difficulty && (
+              <span class="difficulty">{prompt.data.difficulty}</span>
+            )}
+            {prompt.data.useCase && (
+              <span class="use-case">{prompt.data.useCase}</span>
+            )}
+          </div>
+
+          {prompt.data.preview && (
+            <div class="prompt-preview">
+              <code>{prompt.data.preview}</code>
+            </div>
+          )}
+
+          <div class="tags">
+            {prompt.data.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+
+          <div class="prompt-footer">
+            <time class="date">{formatDate(prompt.data.pubDate)}</time>
+            {prompt.data.effectiveness && (
+              <span class="effectiveness">
+                Effectiveness: {'★'.repeat(prompt.data.effectiveness)}{'☆'.repeat(5 - prompt.data.effectiveness)}
+              </span>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    {prompts.length === 0 && (
+      <div class="empty-state">
+        <p>No AI prompts yet. Building a collection of powerful prompts!</p>
+      </div>
+    )}
+  </div>
+
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .prompts-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .prompt-card {
+      background: var(--bg-secondary);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-left: 4px solid var(--color-accent);
+    }
+
+    .prompt-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .prompt-card h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.3rem;
+    }
+
+    .prompt-card h2 a {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .prompt-card h2 a:hover {
+      color: var(--color-accent);
+    }
+
+    .description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .prompt-meta {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .prompt-meta span {
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .category {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .model {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .difficulty {
+      background: var(--color-warning);
+      color: white;
+    }
+
+    .use-case {
+      background: var(--color-info);
+      color: white;
+    }
+
+    .prompt-preview {
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border-color);
+    }
+
+    .prompt-preview code {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: var(--text-primary);
+      display: block;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: var(--tag-color);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+    }
+
+    .prompt-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .effectiveness {
+      color: var(--color-warning);
+      font-weight: 500;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</BaseLayout>

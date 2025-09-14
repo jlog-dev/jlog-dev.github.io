@@ -1,0 +1,357 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { formatDate } from "../../utils/content";
+
+export async function getStaticPaths() {
+  const prompts = await getCollection("prompts");
+  return prompts.map((prompt) => ({
+    params: { slug: prompt.slug },
+    props: { prompt },
+  }));
+}
+
+const { prompt } = Astro.props;
+const { Content } = await prompt.render();
+---
+
+<BaseLayout title={prompt.data.title}>
+  <article class="prompt-article">
+    <header class="prompt-header">
+      <h1>{prompt.data.title}</h1>
+      <p class="description">{prompt.data.description}</p>
+      
+      <div class="prompt-meta">
+        <div class="meta-group">
+          <span class="category">{prompt.data.category}</span>
+          <span class="model">{prompt.data.model}</span>
+          {prompt.data.difficulty && (
+            <span class="difficulty">{prompt.data.difficulty}</span>
+          )}
+          {prompt.data.useCase && (
+            <span class="use-case">{prompt.data.useCase}</span>
+          )}
+        </div>
+        
+        <div class="meta-info">
+          <time class="date">{formatDate(prompt.data.pubDate)}</time>
+          {prompt.data.effectiveness && (
+            <span class="effectiveness">
+              Effectiveness: {'★'.repeat(prompt.data.effectiveness)}{'☆'.repeat(5 - prompt.data.effectiveness)}
+            </span>
+          )}
+        </div>
+      </div>
+
+      {prompt.data.tags && (
+        <div class="tags">
+          {prompt.data.tags.map((tag) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <div class="prompt-content">
+      <Content />
+    </div>
+
+    {prompt.data.examples && (
+      <section class="examples-section">
+        <h2>Examples</h2>
+        <div class="examples">
+          {prompt.data.examples.map((example, index) => (
+            <div class="example">
+              <h3>Example {index + 1}</h3>
+              {example.input && (
+                <div class="example-input">
+                  <h4>Input:</h4>
+                  <pre><code>{example.input}</code></pre>
+                </div>
+              )}
+              {example.output && (
+                <div class="example-output">
+                  <h4>Output:</h4>
+                  <pre><code>{example.output}</code></pre>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+    {prompt.data.tips && (
+      <section class="tips-section">
+        <h2>Tips & Best Practices</h2>
+        <ul class="tips-list">
+          {prompt.data.tips.map((tip) => (
+            <li>{tip}</li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    <footer class="prompt-footer">
+      <a href="/prompts" class="back-link">← Back to AI Prompts</a>
+    </footer>
+  </article>
+
+  <style>
+    .prompt-article {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .prompt-header {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .prompt-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .description {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .prompt-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .meta-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .prompt-meta span {
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .category {
+      background: var(--color-primary);
+      color: white;
+    }
+
+    .model {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .difficulty {
+      background: var(--color-warning);
+      color: white;
+    }
+
+    .use-case {
+      background: var(--color-info);
+      color: white;
+    }
+
+    .effectiveness {
+      color: var(--color-warning);
+      font-weight: 500;
+    }
+
+    .tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: var(--tag-color);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+    }
+
+    .prompt-content {
+      margin-bottom: 3rem;
+      line-height: 1.7;
+    }
+
+    .prompt-content :global(h2) {
+      color: var(--text-primary);
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .prompt-content :global(h3) {
+      color: var(--text-primary);
+      margin-top: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 1.25rem;
+    }
+
+    .prompt-content :global(p) {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .prompt-content :global(pre) {
+      background: var(--bg-tertiary);
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      margin: 1.5rem 0;
+      border: 1px solid var(--border-color);
+    }
+
+    .prompt-content :global(code) {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    .prompt-content :global(blockquote) {
+      border-left: 4px solid var(--color-accent);
+      padding-left: 1.5rem;
+      margin: 1.5rem 0;
+      font-style: italic;
+      color: var(--text-secondary);
+    }
+
+    .examples-section,
+    .tips-section {
+      margin-bottom: 3rem;
+      padding: 2rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+    }
+
+    .examples-section h2,
+    .tips-section h2 {
+      color: var(--text-primary);
+      margin-bottom: 1.5rem;
+      font-size: 1.5rem;
+    }
+
+    .example {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--bg-primary);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .example h3 {
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      font-size: 1.1rem;
+    }
+
+    .example-input,
+    .example-output {
+      margin-bottom: 1rem;
+    }
+
+    .example-input h4,
+    .example-output h4 {
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .example pre {
+      background: var(--bg-tertiary);
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      overflow-x: auto;
+      margin: 0;
+    }
+
+    .example code {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+
+    .tips-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tips-list li {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .tips-list li:before {
+      content: "💡";
+      position: absolute;
+      left: 0;
+      top: 0.75rem;
+    }
+
+    .tips-list li:last-child {
+      border-bottom: none;
+    }
+
+    .prompt-footer {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .back-link {
+      color: var(--color-accent);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--transition-fast);
+    }
+
+    .back-link:hover {
+      color: var(--text-primary);
+    }
+
+    @media (max-width: 768px) {
+      .prompt-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .meta-info {
+        align-items: flex-start;
+      }
+
+      .prompt-header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</BaseLayout>
