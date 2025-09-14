@@ -1,8 +1,15 @@
 ---
 title: "Saga Pattern in Microservices — A Real-World Case Study"
-description: Learn by making msitakes.
+description: "Learn by making mistakes - a practical guide to implementing the Saga Pattern in distributed systems with real-world challenges and solutions."
 pubDate: 2025-04-21
-tags: ["technical"]
+tags: ["microservices", "distributed-systems", "saga-pattern", "architecture"]
+categories: ["Software Architecture"]
+type: "tutorial"
+featured: true
+lang: "en"
+tableOfContents: true
+author: "JLog"
+excerpt: "Insights and lessons learned from implementing the Saga Pattern in a real-world microservices scenario with GDPR compliance requirements."
 ---
 
 ## What This Blog Answers
