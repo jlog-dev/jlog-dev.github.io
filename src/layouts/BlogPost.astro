@@ -1,5 +1,13 @@
 ---
-const { title, pubDate, updatedDate, tags, headings, prev, next } = Astro.props;
+import { calculateReadingTime, getRelatedPosts } from "../utils/content";
+
+const { title, pubDate, updatedDate, tags, headings, prev, next, post, content } = Astro.props;
+
+// Calculate reading time
+const readingTime = calculateReadingTime(content || '');
+
+// Get related posts
+const relatedPosts = post ? await getRelatedPosts(post, 3) : [];
 ---
 
 <article class="blog-post">
@@ -8,12 +16,13 @@ const { title, pubDate, updatedDate, tags, headings, prev, next } = Astro.props;
     <p class="meta">
       <time datetime={pubDate.toISOString()}>{pubDate.toDateString()}</time>
       {updatedDate && <span> · Updated {updatedDate.toDateString()}</span>}
+      <span> · {readingTime.text}</span>
     </p>
 
     {
       tags?.length && (
         <ul class="tags">
-          {tags.map((tag) => (
+          {tags.map((tag: string) => (
             <li>
               <a href={`/tags/${tag}`}>{tag}</a>
             </li>
@@ -28,8 +37,8 @@ const { title, pubDate, updatedDate, tags, headings, prev, next } = Astro.props;
         <strong>Table of Contents</strong>
         <ul>
           {headings
-            .filter((h) => h.depth <= 3)
-            .map((h) => (
+            .filter((h: any) => h.depth <= 3)
+            .map((h: any) => (
               <li style={`margin-left: ${(h.depth - 1) * 1}rem`}>
                 <a href={`#${h.slug}`}>{h.text}</a>
               </li>
@@ -43,6 +52,33 @@ const { title, pubDate, updatedDate, tags, headings, prev, next } = Astro.props;
     <slot />
   </section>
 </article>
+
+<!-- Related Posts Section -->
+{relatedPosts.length > 0 && (
+  <section class="related-posts">
+    <h2>Related Posts</h2>
+    <div class="related-grid">
+      {relatedPosts.map((relatedPost) => (
+        <article class="related-card">
+          <h3>
+            <a href={`/blog/${relatedPost.slug}`}>{relatedPost.data.title}</a>
+          </h3>
+          <p>{relatedPost.data.description}</p>
+          <div class="related-meta">
+            <time>{relatedPost.data.pubDate.toDateString()}</time>
+            {relatedPost.data.tags && (
+              <div class="related-tags">
+                {relatedPost.data.tags.slice(0, 2).map((tag: string) => (
+                  <span class="tag">{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+  </section>
+)}
 
 <footer class="post-footer">
   {
@@ -137,5 +173,79 @@ const { title, pubDate, updatedDate, tags, headings, prev, next } = Astro.props;
     color: #0070f3;
     font-weight: 500;
     text-decoration: none;
+  }
+
+  /* Related Posts Styles */
+  .related-posts {
+    max-width: 720px;
+    margin: 4rem auto 2rem;
+    padding: 0 1rem;
+  }
+
+  .related-posts h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    text-align: center;
+  }
+
+  .related-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .related-card {
+    background: var(--bg-secondary);
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .related-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .related-card h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+  }
+
+  .related-card h3 a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .related-card h3 a:hover {
+    color: var(--color-accent);
+  }
+
+  .related-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .related-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .related-tags {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  .related-tags .tag {
+    background: var(--tag-bg);
+    color: var(--tag-color);
+    padding: 0.2rem 0.4rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.7rem;
   }
 </style>

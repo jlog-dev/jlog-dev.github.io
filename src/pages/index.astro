@@ -2,20 +2,27 @@
 import { getCollection } from "astro:content";
 import BlogCard from "../components/BlogCard.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import { 
+  getFeaturedBlogPosts, 
+  getFeaturedProjects, 
+  getContentStats, 
+  getAllTags,
+  getAllSnippets,
+  getAllTILPosts 
+} from "../utils/content";
 
-const posts = await getCollection("blog");
-const featuredPosts = posts.filter((p) => p.data.featured);
-const tagMap = new Map();
+// Get featured content from all collections
+const featuredPosts = await getFeaturedBlogPosts(3);
+const featuredProjects = await getFeaturedProjects(2);
+const recentSnippets = await getAllSnippets();
+const recentTIL = await getAllTILPosts();
+const contentStats = await getContentStats();
+const popularTags = await getAllTags();
 
-for (const post of posts) {
-  post.data.tags?.forEach((tag: any) => {
-    tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
-  });
-}
-
-const popularTags = Array.from(tagMap.entries())
-  .sort((a, b) => b[1] - a[1])
-  .slice(0, 5);
+// Limit recent content
+const latestSnippets = recentSnippets.slice(0, 2);
+const latestTIL = recentTIL.slice(0, 2);
+const topTags = popularTags.slice(0, 8);
 ---
 
 <BaseLayout title="Home">
@@ -30,17 +37,40 @@ const popularTags = Array.from(tagMap.entries())
     <p class="actions">
       → <a href="/blog">Read the blog</a> ・
       <a href="/projects">See my projects</a> ・
-      <a href="/about">About me</a>
+      <a href="/snippets">Code snippets</a> ・
+      <a href="/til">Today I learned</a>
     </p>
+  </section>
+
+  <!-- Content Stats -->
+  <section class="content-stats">
+    <div class="stats-grid">
+      <div class="stat-item">
+        <span class="stat-number">{contentStats.blogPosts}</span>
+        <span class="stat-label">Blog Posts</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{contentStats.projects}</span>
+        <span class="stat-label">Projects</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{contentStats.snippets}</span>
+        <span class="stat-label">Code Snippets</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number">{contentStats.tilPosts}</span>
+        <span class="stat-label">TIL Posts</span>
+      </div>
+    </div>
   </section>
 
   <section class="popular-tags">
     <h2>Popular Tags</h2>
     <div class="tag-list">
       {
-        popularTags.map(([tag, count]) => (
+        topTags.map((tag) => (
           <a href={`/tags/${tag}`} class="tag">
-            {tag} <span class="count">({count})</span>
+            {tag}
           </a>
         ))
       }
@@ -51,22 +81,74 @@ const popularTags = Array.from(tagMap.entries())
     <h2>✨ Featured Posts</h2>
     <div class="post-grid">
       {
-        featuredPosts.map(
-          (post: {
-            data: { title: string; description: string; pubDate: string };
-            slug: string;
-          }) => (
-            <BlogCard
-              title={post.data.title}
-              description={post.data.description}
-              date={post.data.pubDate}
-              href={`/blog/${post.slug}`}
-            />
-          )
-        )
+        featuredPosts.map((post) => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.pubDate}
+            href={`/blog/${post.slug}`}
+          />
+        ))
       }
     </div>
   </section>
+
+  <!-- Recent Snippets -->
+  {latestSnippets.length > 0 && (
+    <section class="recent-content">
+      <h2>🔧 Latest Code Snippets</h2>
+      <div class="content-grid">
+        {latestSnippets.map((snippet) => (
+          <div class="content-card">
+            <h3><a href={`/snippets/${snippet.slug}`}>{snippet.data.title}</a></h3>
+            <p>{snippet.data.description}</p>
+            <div class="content-meta">
+              <span class="language">{snippet.data.language}</span>
+              <span class="difficulty">{snippet.data.difficulty}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Recent TIL -->
+  {latestTIL.length > 0 && (
+    <section class="recent-content">
+      <h2>💡 Today I Learned</h2>
+      <div class="content-grid">
+        {latestTIL.map((til) => (
+          <div class="content-card">
+            <h3><a href={`/til/${til.slug}`}>{til.data.title}</a></h3>
+            <p>{til.data.description}</p>
+            <div class="content-meta">
+              <span class="category">{til.data.category}</span>
+              <span class="difficulty">{til.data.difficulty}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
+
+  <!-- Featured Projects -->
+  {featuredProjects.length > 0 && (
+    <section class="recent-content">
+      <h2>🚀 Featured Projects</h2>
+      <div class="content-grid">
+        {featuredProjects.map((project) => (
+          <div class="content-card">
+            <h3><a href={`/projects/${project.slug}`}>{project.data.title}</a></h3>
+            <p>{project.data.description}</p>
+            <div class="content-meta">
+              <span class="tech">{project.data.tech.slice(0, 2).join(', ')}</span>
+              <span class="status">{project.data.status}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  )}
 
   <style>
     .hero {
@@ -170,6 +252,128 @@ const popularTags = Array.from(tagMap.entries())
       font-size: 0.75rem;
       margin-left: 0.3rem;
       color: var(--meta-text);
+    }
+
+    /* Content Stats */
+    .content-stats {
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 1rem;
+      text-align: center;
+    }
+
+    .stat-item {
+      background: var(--bg-secondary);
+      padding: 1.5rem 1rem;
+      border-radius: var(--radius-md);
+      transition: transform 0.2s ease;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-2px);
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--color-accent);
+      line-height: 1;
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      margin-top: 0.5rem;
+    }
+
+    /* Recent Content Sections */
+    .recent-content {
+      max-width: 720px;
+      margin: 3rem auto;
+      padding: 0 1rem;
+    }
+
+    .recent-content h2 {
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .content-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .content-card {
+      background: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: var(--radius-md);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .content-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .content-card h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.1rem;
+    }
+
+    .content-card h3 a {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .content-card h3 a:hover {
+      color: var(--color-accent);
+    }
+
+    .content-card p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .content-meta {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .content-meta span {
+      background: var(--tag-bg);
+      color: var(--tag-color);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      text-transform: capitalize;
+    }
+
+    .language {
+      background: var(--color-accent) !important;
+      color: white !important;
+    }
+
+    .difficulty {
+      background: var(--color-warning) !important;
+      color: white !important;
+    }
+
+    .status {
+      background: var(--color-success) !important;
+      color: white !important;
     }
   </style>
 </BaseLayout>
