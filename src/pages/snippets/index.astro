@@ -1,0 +1,156 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getAllSnippets } from "../../utils/content";
+
+const snippets = await getAllSnippets();
+---
+
+<BaseLayout title="Code Snippets">
+  <div class="container">
+    <header class="page-header">
+      <h1>🔧 Code Snippets</h1>
+      <p>Useful code snippets and utilities I've collected over time.</p>
+    </header>
+
+    <div class="snippets-grid">
+      {snippets.map((snippet) => (
+        <article class="snippet-card">
+          <h2>
+            <a href={`/snippets/${snippet.slug}`}>{snippet.data.title}</a>
+          </h2>
+          <p class="description">{snippet.data.description}</p>
+          
+          <div class="snippet-meta">
+            <span class="language">{snippet.data.language}</span>
+            <span class="difficulty">{snippet.data.difficulty}</span>
+            {snippet.data.framework && (
+              <span class="framework">{snippet.data.framework}</span>
+            )}
+          </div>
+
+          <div class="tags">
+            {snippet.data.tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    {snippets.length === 0 && (
+      <div class="empty-state">
+        <p>No code snippets yet. Check back soon!</p>
+      </div>
+    )}
+  </div>
+
+  <style>
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .page-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .snippets-grid {
+      display: grid;
+      gap: 2rem;
+    }
+
+    .snippet-card {
+      background: var(--bg-secondary);
+      padding: 2rem;
+      border-radius: var(--radius-lg);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .snippet-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .snippet-card h2 {
+      margin: 0 0 1rem 0;
+      font-size: 1.3rem;
+    }
+
+    .snippet-card h2 a {
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .snippet-card h2 a:hover {
+      color: var(--color-accent);
+    }
+
+    .description {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .snippet-meta {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .snippet-meta span {
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .language {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .difficulty {
+      background: var(--color-warning);
+      color: white;
+    }
+
+    .framework {
+      background: var(--color-info);
+      color: white;
+    }
+
+    .tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: var(--tag-color);
+      padding: 0.25rem 0.5rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-secondary);
+    }
+  </style>
+</BaseLayout>
