@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BlogCard from "../../components/BlogCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { Wrench, MessageCircle, Settings, Brain } from "lucide-astro";
 
 const posts = await getCollection("blog");
 
@@ -20,12 +21,10 @@ const categorizedPosts = {
 ---
 
 <BaseLayout title="Blog">
-  <h1 class="page-title">📚 Blog</h1>
-  
   <div class="blog-container">
     <!-- Technical Posts -->
     <section class="category-section">
-      <h2 class="category-title">🔧 Technical</h2>
+      <h2 class="category-title"><Wrench class="category-icon" /> Technical</h2>
       <p class="category-desc">Architecture, Spring Framework, Infrastructure & Frontend</p>
       <div class="posts-grid">
         {categorizedPosts.technical.map((post) => (
@@ -41,7 +40,7 @@ const categorizedPosts = {
 
     <!-- Thoughts Posts -->
     <section class="category-section">
-      <h2 class="category-title">💭 Thoughts</h2>
+      <h2 class="category-title"><MessageCircle class="category-icon" /> Thoughts</h2>
       <p class="category-desc">Personal reflections and literary analysis</p>
       <div class="posts-grid">
         {categorizedPosts.thoughts.map((post) => (
@@ -57,7 +56,7 @@ const categorizedPosts = {
 
     <!-- Chinese Technical Posts -->
     <section class="category-section">
-      <h2 class="category-title">🛠️ 中文技术</h2>
+      <h2 class="category-title"><Settings class="category-icon" /> 中文技术</h2>
       <p class="category-desc">架构模式、数据优化与建模策略</p>
       <div class="posts-grid">
         {categorizedPosts.chineseTech.map((post) => (
@@ -73,7 +72,7 @@ const categorizedPosts = {
 
     <!-- Chinese Thoughts Posts -->
     <section class="category-section">
-      <h2 class="category-title">🤔 中文思考</h2>
+      <h2 class="category-title"><Brain class="category-icon" /> 中文思考</h2>
       <p class="category-desc">个人反思、道德思考与方法论</p>
       <div class="posts-grid">
         {categorizedPosts.chineseThoughts.map((post) => (
@@ -90,12 +89,10 @@ const categorizedPosts = {
 </BaseLayout>
 
 <style>
-  .page-title {
-    text-align: center;
-    font-size: var(--font-size-2xl);
-    font-weight: 600;
-    margin: var(--spacing-xl) 0 var(--spacing-lg);
-    color: var(--text-primary);
+  .category-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: var(--spacing-sm);
   }
 
   .blog-container {
@@ -115,6 +112,8 @@ const categorizedPosts = {
     color: var(--text-primary);
     border-bottom: 2px solid var(--color-accent);
     padding-bottom: var(--spacing-xs);
+    display: flex;
+    align-items: center;
   }
 
   .category-desc {

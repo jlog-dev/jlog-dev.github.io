@@ -1,6 +1,7 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, type CollectionEntry } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ExternalLink } from "lucide-astro";
 import { calculateReadingTime, formatDate } from '../../utils/content';
 
 export async function getStaticPaths() {
@@ -25,7 +26,7 @@ const readingTime = calculateReadingTime(bookmark.body);
       <h1>
         <a href={bookmark.data.url} target="_blank" rel="noopener noreferrer" class="bookmark-title">
           {bookmark.data.title}
-          <span class="external-icon">↗</span>
+          <ExternalLink size={14} class="external-icon" />
         </a>
       </h1>
       <p class="description">{bookmark.data.description}</p>

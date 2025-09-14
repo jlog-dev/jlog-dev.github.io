@@ -1,18 +1,6 @@
 ---
-// Primary navigation - most important pages
-const primaryNav = [
-  { href: "/blog", label: "Writing" },
-  { href: "/projects", label: "Building" },
-  { href: "/about", label: "About" },
-];
-
-// Secondary navigation - grouped under "More"
-const secondaryNav = [
-  { href: "/snippets", label: "Code Snippets" },
-  { href: "/prompts", label: "AI Prompts" },
-  { href: "/til", label: "Today I Learned" },
-  { href: "/bookmarks", label: "Bookmarks" },
-];
+import { primaryNav, secondaryNav } from "../data/navigation";
+import { ChevronDown } from "lucide-astro";
 ---
 
 <header class="site-header">
@@ -48,9 +36,7 @@ const secondaryNav = [
       <div class="nav-dropdown">
         <button class="nav-link dropdown-toggle" id="more-menu" aria-expanded="false">
           More
-          <svg class="dropdown-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-            <path d="M6 8.5L2.5 5h7L6 8.5z"/>
-          </svg>
+          <ChevronDown class="dropdown-icon" size={12} />
         </button>
         <ul class="dropdown-menu" role="menu">
           {secondaryNav.map((link) => (

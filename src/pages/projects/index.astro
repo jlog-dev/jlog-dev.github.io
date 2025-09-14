@@ -2,22 +2,144 @@
 import { getCollection } from "astro:content";
 import ProjectCard from "../../components/ProjectCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { Code, Rocket, Globe, Package } from "lucide-astro";
 
-type Project = { data: { title: string; description: string }; slug: string };
+type Project = { data: { title: string; description: string; status?: string; tech?: string[] }; slug: string };
 const projects = (await getCollection("projects")) as Project[];
+
+// Organize projects by category/status
+const categorizedProjects = {
+  active: projects.filter(project => project.data.status === 'active' || project.data.status === 'in-progress'),
+  completed: projects.filter(project => project.data.status === 'completed'),
+  archived: projects.filter(project => project.data.status === 'archived' || project.data.status === 'paused'),
+  all: projects.filter(project => !project.data.status || !['active', 'in-progress', 'completed', 'archived', 'paused'].includes(project.data.status))
+};
+
+// Sort each category by date if available
+(Object.keys(categorizedProjects) as Array<keyof typeof categorizedProjects>).forEach(key => {
+  categorizedProjects[key].sort((a, b) => {
+    // Sort by title if no date available
+    return a.data.title.localeCompare(b.data.title);
+  });
+});
 ---
 
 <BaseLayout title="Projects">
-  <h1 class="page-title">🛠 Projects</h1>
-  <div class="project-grid">
-    {
-      projects.map(({ data, slug }) => (
-        <ProjectCard
-          name={data.title}
-          description={data.description}
-          href={`/projects/${slug}`}
-        />
-      ))
-    }
+  <div class="projects-container">
+    <!-- Active Projects -->
+    {categorizedProjects.active.length > 0 && (
+      <section class="category-section">
+        <h2 class="category-title"><Rocket class="category-icon" /> Active Projects</h2>
+        <p class="category-desc">Currently working on these projects</p>
+        <div class="projects-grid">
+          {categorizedProjects.active.map(({ data, slug }) => (
+            <ProjectCard
+              name={data.title}
+              description={data.description}
+              href={`/projects/${slug}`}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Completed Projects -->
+    {categorizedProjects.completed.length > 0 && (
+      <section class="category-section">
+        <h2 class="category-title"><Package class="category-icon" /> Completed Projects</h2>
+        <p class="category-desc">Successfully delivered and deployed</p>
+        <div class="projects-grid">
+          {categorizedProjects.completed.map(({ data, slug }) => (
+            <ProjectCard
+              name={data.title}
+              description={data.description}
+              href={`/projects/${slug}`}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- All Projects (fallback) -->
+    {categorizedProjects.all.length > 0 && (
+      <section class="category-section">
+        <h2 class="category-title"><Code class="category-icon" /> All Projects</h2>
+        <p class="category-desc">Complete portfolio of work</p>
+        <div class="projects-grid">
+          {categorizedProjects.all.map(({ data, slug }) => (
+            <ProjectCard
+              name={data.title}
+              description={data.description}
+              href={`/projects/${slug}`}
+            />
+          ))}
+        </div>
+      </section>
+    )}
+
+    <!-- Archived Projects -->
+    {categorizedProjects.archived.length > 0 && (
+      <section class="category-section">
+        <h2 class="category-title"><Globe class="category-icon" /> Archived Projects</h2>
+        <p class="category-desc">Past experiments and learning projects</p>
+        <div class="projects-grid">
+          {categorizedProjects.archived.map(({ data, slug }) => (
+            <ProjectCard
+              name={data.title}
+              description={data.description}
+              href={`/projects/${slug}`}
+            />
+          ))}
+        </div>
+      </section>
+    )}
   </div>
 </BaseLayout>
+
+<style>
+  .category-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: var(--spacing-sm);
+  }
+
+  .projects-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+  }
+
+  .category-section {
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .category-title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: var(--spacing-xs);
+    display: flex;
+    align-items: center;
+  }
+
+  .category-desc {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    font-style: italic;
+  }
+
+  .projects-grid {
+    display: grid;
+    gap: var(--spacing-lg);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .projects-grid {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+  }
+</style>

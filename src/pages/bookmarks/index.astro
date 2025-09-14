@@ -1,5 +1,7 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { ExternalLink } from "lucide-astro";
 import { getAllBookmarks, formatDate } from "../../utils/content";
 
 const bookmarks = await getAllBookmarks();
@@ -18,7 +20,7 @@ const bookmarks = await getAllBookmarks();
           <h2>
             <a href={bookmark.data.url} target="_blank" rel="noopener noreferrer">
               {bookmark.data.title}
-              <span class="external-icon">↗</span>
+              <ExternalLink size={14} class="external-icon" />
             </a>
           </h2>
           <p class="description">{bookmark.data.description}</p>

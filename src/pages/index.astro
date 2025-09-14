@@ -1,6 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import { Github, Mail, Zap, FileText, Rocket, Code, BookOpen, Target, ExternalLink, PenTool, Lightbulb } from "lucide-astro";
 import { getContentStats } from "../utils/content";
 
 // Get minimal data for initial load
@@ -54,10 +57,10 @@ const currentActivity = recentBlogPosts[0];
             </div>
             <div class="action-buttons">
               <a href="https://github.com/jlog-dev" target="_blank" class="action-btn">
-                <span class="icon">🔗</span> GitHub
+                <Github size={16} /> GitHub
               </a>
               <a href="mailto:you@example.com" class="action-btn">
-                <span class="icon">✉️</span> Email
+                <Mail size={16} /> Email
               </a>
             </div>
           </div>
@@ -92,7 +95,7 @@ const currentActivity = recentBlogPosts[0];
       <!-- Blog Section -->
       <div class="content-section">
         <div class="section-header">
-          <h3>📝 Writing</h3>
+          <h3><PenTool class="section-icon" /> Writing</h3>
           <a href="/blog" class="section-link">View all →</a>
         </div>
         <div class="section-preview">
@@ -109,7 +112,7 @@ const currentActivity = recentBlogPosts[0];
       <!-- Projects Section -->
       <div class="content-section">
         <div class="section-header">
-          <h3>🚀 Building</h3>
+          <h3><Rocket class="section-icon" /> Building</h3>
           <a href="/projects" class="section-link">View all →</a>
         </div>
         <div class="section-preview">
@@ -126,7 +129,7 @@ const currentActivity = recentBlogPosts[0];
       <!-- Learning Section -->
       <div class="content-section">
         <div class="section-header">
-          <h3>💡 Learning</h3>
+          <h3><Lightbulb class="section-icon" /> Learning</h3>
           <a href="/til" class="section-link">View all →</a>
         </div>
         <div class="section-preview">
@@ -140,7 +143,7 @@ const currentActivity = recentBlogPosts[0];
       <!-- Tools Section -->
       <div class="content-section">
         <div class="section-header">
-          <h3>⚡ Tools</h3>
+          <h3><Zap class="section-icon" /> Tools</h3>
           <a href="/snippets" class="section-link">View all →</a>
         </div>
         <div class="section-preview">
@@ -158,50 +161,48 @@ const currentActivity = recentBlogPosts[0];
     <section class="activity-section">
       <div class="activity-feed">
         <h2 class="section-title">
-          <span class="section-icon">⚡</span>
-          Activity Timeline
+          <Zap class="section-icon" size={32} />
+          Recent Activity
         </h2>
-        <div class="timeline-container">
-          <div class="timeline-items">
-            <div class="timeline-item">
-              <div class="timeline-icon">📝</div>
-              <div class="timeline-content">
-                <h4>Published New Blog Post</h4>
-                <p>Shared insights on modern web development and cyberpunk design patterns</p>
-                <time>2 days ago</time>
-              </div>
+        <div class="activity-grid">
+          <div class="activity-card">
+            <div class="activity-icon">
+              <FileText size={24} />
             </div>
-            <div class="timeline-item">
-              <div class="timeline-icon">🚀</div>
-              <div class="timeline-content">
-                <h4>Website Redesign Complete</h4>
-                <p>Implemented full-screen layout with cyberpunk theme and scroll-snap sections</p>
-                <time>1 week ago</time>
-              </div>
+            <div class="activity-info">
+              <h4>Latest Post</h4>
+              <p>Cyberpunk design patterns</p>
+              <time>2 days ago</time>
             </div>
-            <div class="timeline-item">
-              <div class="timeline-icon">💻</div>
-              <div class="timeline-content">
-                <h4>New Project Launch</h4>
-                <p>Released open-source component library with TypeScript support</p>
-                <time>2 weeks ago</time>
-              </div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-icon">
+              <Rocket size={24} />
             </div>
-            <div class="timeline-item">
-              <div class="timeline-icon">📚</div>
-              <div class="timeline-content">
-                <h4>Learning Update</h4>
-                <p>Completed advanced CSS animations course and applied new techniques</p>
-                <time>3 weeks ago</time>
-              </div>
+            <div class="activity-info">
+              <h4>Site Redesign</h4>
+              <p>Full-screen layout complete</p>
+              <time>1 week ago</time>
             </div>
-            <div class="timeline-item">
-              <div class="timeline-icon">🎯</div>
-              <div class="timeline-content">
-                <h4>Code Snippet Added</h4>
-                <p>Created reusable React hooks for form validation and state management</p>
-                <time>1 month ago</time>
-              </div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-icon">
+              <Code size={24} />
+            </div>
+            <div class="activity-info">
+              <h4>New Project</h4>
+              <p>Component library released</p>
+              <time>2 weeks ago</time>
+            </div>
+          </div>
+          <div class="activity-card">
+            <div class="activity-icon">
+              <BookOpen size={24} />
+            </div>
+            <div class="activity-info">
+              <h4>Learning</h4>
+              <p>CSS animations mastered</p>
+              <time>3 weeks ago</time>
             </div>
           </div>
         </div>
@@ -467,8 +468,9 @@ const currentActivity = recentBlogPosts[0];
       box-shadow: var(--shadow-glow), 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
-    .action-btn .icon {
-      font-size: var(--font-size-sm);
+    .action-btn svg {
+      width: 16px;
+      height: 16px;
     }
 
     .section-title {
@@ -486,14 +488,15 @@ const currentActivity = recentBlogPosts[0];
     }
 
     .section-icon {
-      font-size: var(--font-size-3xl);
-      filter: drop-shadow(0 0 10px var(--color-neon-cyan));
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 0 10px var(--color-accent));
       animation: icon-glow 2s ease-in-out infinite alternate;
     }
     
     @keyframes icon-glow {
-      0% { filter: drop-shadow(0 0 10px var(--color-neon-cyan)); }
-      100% { filter: drop-shadow(0 0 20px var(--color-neon-pink)); }
+      0% { filter: drop-shadow(0 0 10px var(--color-accent)); }
+      100% { filter: drop-shadow(0 0 20px var(--color-accent-hover)); }
     }
 
     /* Content Sections Container */
@@ -936,13 +939,17 @@ const currentActivity = recentBlogPosts[0];
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: var(--font-size-lg);
+      color: var(--text-primary);
       flex-shrink: 0;
-      box-shadow: var(--shadow-glow);
       position: relative;
       overflow: hidden;
       border: 2px solid var(--border-primary);
       animation: timeline-icon-pulse 2s ease-in-out infinite;
+    }
+
+    .timeline-icon svg {
+      width: 20px;
+      height: 20px;
     }
     
     @keyframes timeline-icon-pulse {
@@ -976,6 +983,129 @@ const currentActivity = recentBlogPosts[0];
     .timeline-content time {
       font-size: var(--font-size-xs);
       color: var(--text-tertiary);
+    }
+
+    /* Activity Grid Styles */
+    .activity-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .activity-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      transition: all var(--transition-base);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .activity-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--bg-gradient);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition-base);
+    }
+
+    .activity-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-glow);
+      border-color: var(--color-accent);
+    }
+
+    .activity-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .activity-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-lg);
+      background: var(--bg-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      flex-shrink: 0;
+      border: 1px solid var(--border-primary);
+    }
+
+    .activity-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .activity-info h4 {
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-semibold);
+      color: var(--text-heading);
+      margin: 0 0 var(--spacing-xs) 0;
+      line-height: 1.3;
+    }
+
+    .activity-info p {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      margin: 0 0 var(--spacing-xs) 0;
+      line-height: 1.4;
+    }
+
+    .activity-info time {
+      font-size: var(--font-size-xs);
+      color: var(--color-accent);
+      font-family: var(--font-family-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Activity Summary */
+    .activity-summary {
+      background: var(--bg-card);
+      border: 1px solid var(--border-primary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      text-align: center;
+    }
+
+    .summary-stats {
+      display: flex;
+      justify-content: center;
+      gap: var(--spacing-xl);
+      flex-wrap: wrap;
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--spacing-xs);
+    }
+
+    .stat-number {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--color-accent);
+      font-family: var(--font-family-mono);
+      text-shadow: 0 0 10px var(--color-accent);
+    }
+
+    .stat-label {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
     /* Responsive Design */
@@ -1063,15 +1193,21 @@ const currentActivity = recentBlogPosts[0];
         align-items: stretch;
       }
       
-      .timeline-item {
-        gap: var(--spacing-sm);
+      .activity-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .activity-card {
         padding: var(--spacing-md);
       }
       
-      .timeline-icon {
+      .activity-icon {
         width: 40px;
         height: 40px;
-        font-size: var(--font-size-base);
+      }
+
+      .summary-stats {
+        gap: var(--spacing-lg);
       }
     }
 
@@ -1140,7 +1276,8 @@ const currentActivity = recentBlogPosts[0];
       }
       
       .section-icon {
-        font-size: var(--font-size-xl);
+        width: 24px;
+        height: 24px;
       }
     }
   </style>
