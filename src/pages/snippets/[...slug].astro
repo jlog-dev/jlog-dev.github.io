@@ -1,0 +1,236 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { calculateReadingTime, formatDate } from '../../utils/content';
+
+export async function getStaticPaths() {
+  const snippets = await getCollection('snippets');
+  return snippets.map((snippet) => ({
+    params: { slug: snippet.slug },
+    props: snippet,
+  }));
+}
+
+type Props = CollectionEntry<'snippets'>;
+
+const snippet = Astro.props;
+const { Content } = await snippet.render();
+const readingTime = calculateReadingTime(snippet.body);
+---
+
+<BaseLayout title={snippet.data.title}>
+  <article class="snippet-post">
+    <header class="snippet-header">
+      <h1>{snippet.data.title}</h1>
+      <p class="description">{snippet.data.description}</p>
+      
+      <div class="snippet-meta">
+        <div class="meta-row">
+          <span class="language">{snippet.data.language}</span>
+          <span class="difficulty">{snippet.data.difficulty}</span>
+          {snippet.data.framework && (
+            <span class="framework">{snippet.data.framework}</span>
+          )}
+          <span class="reading-time">{readingTime.text}</span>
+        </div>
+        
+        <div class="meta-row">
+          <time class="date">{formatDate(snippet.data.pubDate)}</time>
+          <span class="category">{snippet.data.category}</span>
+        </div>
+      </div>
+
+      {snippet.data.tags.length > 0 && (
+        <div class="tags">
+          {snippet.data.tags.map((tag: string) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <section class="snippet-content">
+      <Content />
+    </section>
+  </article>
+
+  <nav class="snippet-nav">
+    <a href="/snippets" class="back-link">← Back to Snippets</a>
+  </nav>
+
+  <style>
+    .snippet-post {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .snippet-header {
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .snippet-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .description {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .snippet-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .snippet-meta span {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .language {
+      background: var(--color-accent);
+      color: white;
+    }
+
+    .difficulty {
+      background: var(--color-warning);
+      color: white;
+    }
+
+    .framework {
+      background: var(--color-info);
+      color: white;
+    }
+
+    .reading-time {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+    }
+
+    .date {
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+    }
+
+    .category {
+      background: var(--color-success);
+      color: white;
+      text-transform: capitalize;
+    }
+
+    .tags {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: var(--tag-color);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+    }
+
+    .snippet-content {
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    .snippet-content :global(pre) {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+
+    .snippet-content :global(code) {
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9em;
+    }
+
+    .snippet-content :global(pre code) {
+      background: none;
+      padding: 0;
+    }
+
+    .snippet-content :global(h2) {
+      margin-top: 3rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .snippet-content :global(h3) {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+    }
+
+    .snippet-nav {
+      max-width: 800px;
+      margin: 3rem auto 0;
+      padding: 0 1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-accent);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+      background: var(--color-accent);
+      color: white;
+      transform: translateX(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .snippet-header h1 {
+        font-size: 2rem;
+      }
+
+      .meta-row {
+        justify-content: center;
+      }
+
+      .snippet-meta span {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+    }
+  </style>
+</BaseLayout>

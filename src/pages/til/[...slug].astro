@@ -1,0 +1,240 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { calculateReadingTime, formatDate } from '../../utils/content';
+
+export async function getStaticPaths() {
+  const tilPosts = await getCollection('til');
+  return tilPosts.map((post) => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+
+type Props = CollectionEntry<'til'>;
+
+const post = Astro.props;
+const { Content } = await post.render();
+const readingTime = calculateReadingTime(post.body);
+---
+
+<BaseLayout title={post.data.title}>
+  <article class="til-post">
+    <header class="til-header">
+      <div class="til-badge">💡 Today I Learned</div>
+      <h1>{post.data.title}</h1>
+      <p class="description">{post.data.description}</p>
+      
+      <div class="til-meta">
+        <span class="category">{post.data.category}</span>
+        <span class="difficulty">{post.data.difficulty}</span>
+        <span class="reading-time">{readingTime.text}</span>
+        <time class="date">{formatDate(post.data.pubDate)}</time>
+      </div>
+
+      {post.data.tags.length > 0 && (
+        <div class="tags">
+          {post.data.tags.map((tag: string) => (
+            <span class="tag">{tag}</span>
+          ))}
+        </div>
+      )}
+    </header>
+
+    <section class="til-content">
+      <Content />
+    </section>
+  </article>
+
+  <nav class="til-nav">
+    <a href="/til" class="back-link">← Back to TIL</a>
+  </nav>
+
+  <style>
+    .til-post {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+    }
+
+    .til-header {
+      margin-bottom: 3rem;
+      text-align: center;
+    }
+
+    .til-badge {
+      display: inline-block;
+      background: var(--color-accent);
+      color: white;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+
+    .til-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .description {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .til-meta {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2rem;
+    }
+
+    .til-meta span {
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .category {
+      background: var(--color-primary);
+      color: white;
+      text-transform: capitalize;
+    }
+
+    .difficulty {
+      background: var(--color-warning);
+      color: white;
+      text-transform: capitalize;
+    }
+
+    .reading-time {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+    }
+
+    .date {
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+    }
+
+    .tags {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: var(--tag-color);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.8rem;
+    }
+
+    .til-content {
+      line-height: 1.7;
+      color: var(--text-primary);
+      border-left: 4px solid var(--color-accent);
+      padding-left: 2rem;
+      margin-left: 1rem;
+    }
+
+    .til-content :global(h2) {
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      font-size: 1.5rem;
+    }
+
+    .til-content :global(h3) {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      color: var(--text-primary);
+      font-size: 1.2rem;
+    }
+
+    .til-content :global(pre) {
+      background: var(--code-bg);
+      padding: 1.5rem;
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+      margin: 2rem 0;
+    }
+
+    .til-content :global(code) {
+      background: var(--code-bg);
+      padding: 0.2rem 0.4rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.9em;
+    }
+
+    .til-content :global(pre code) {
+      background: none;
+      padding: 0;
+    }
+
+    .til-content :global(blockquote) {
+      border-left: 4px solid var(--color-warning);
+      padding-left: 1rem;
+      margin: 2rem 0;
+      font-style: italic;
+      color: var(--text-secondary);
+    }
+
+    .til-nav {
+      max-width: 800px;
+      margin: 3rem auto 0;
+      padding: 0 1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-accent);
+      text-decoration: none;
+      font-weight: 500;
+      padding: 0.75rem 1.5rem;
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      transition: all 0.2s ease;
+    }
+
+    .back-link:hover {
+      background: var(--color-accent);
+      color: white;
+      transform: translateX(-2px);
+    }
+
+    @media (max-width: 768px) {
+      .til-header h1 {
+        font-size: 2rem;
+      }
+
+      .til-meta {
+        justify-content: center;
+      }
+
+      .til-meta span {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+      }
+
+      .til-content {
+        padding-left: 1rem;
+        margin-left: 0.5rem;
+      }
+    }
+  </style>
+</BaseLayout>
