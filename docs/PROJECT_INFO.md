@@ -15,15 +15,20 @@ JLog is a personal digital logbook where I share what I build, learn, and think.
 ## 🚀 Key Features
 
 ### 📝 Content Management
-- **Bilingual Support**: Content in both English and Chinese
-- **Blog System**: Technical articles, tutorials, and personal reflections
+- **Bilingual Support**: Content in both English and Chinese with organized structure
+- **Blog System**: Hierarchically organized content with specialized categories:
+  - **Technical**: Architecture (DDD, Microservices), Spring Framework, Infrastructure (Kafka, AWS), Frontend
+  - **Thoughts**: Personal reflections and literary analysis in English
+  - **中文技术**: Chinese technical content focusing on architecture and data modeling
+  - **中文思考**: Chinese philosophical and personal reflections
 - **Project Showcase**: Portfolio with tech stack and repository links
 - **Code Snippets**: Reusable code examples with syntax highlighting
 - **AI Prompts**: Curated collection of effective AI prompts for various tasks
 - **TIL (Today I Learned)**: Quick notes and discoveries from daily learning
 - **Bookmarks**: Curated links to useful resources and articles
-- **Tag System**: Categorization and filtering by topics
-- **Featured Posts**: Highlighted content on homepage
+- **Structured Navigation**: Category-based organization for improved content discovery
+- **Tag System**: Cross-category tagging with technical/thoughts classification
+- **Featured Posts**: Highlighted content from different categories on homepage
 - **Table of Contents**: Auto-generated for blog posts
 - **RSS Feed**: Automatic feed generation for subscribers
 
@@ -91,7 +96,15 @@ jlog-dev.github.io/
 │   │   ├── Header.astro         # Navigation with theme toggle
 │   │   └── ProjectCard.astro    # Project showcase cards
 │   ├── content/                 # Content collections
-│   │   ├── blog/                # Blog posts (16 articles)
+│   │   ├── blog/                # Blog posts (16 articles) - Organized by category:
+│   │   │   ├── technical/       # Technical content (9 posts)
+│   │   │   │   ├── architecture/    # System design, DDD, microservices (3 posts)
+│   │   │   │   ├── spring/          # Spring framework tutorials (3 posts)
+│   │   │   │   ├── infrastructure/  # Kafka, AWS, DevOps (2 posts)
+│   │   │   │   └── frontend/        # Frontend development (1 post)
+│   │   │   ├── thoughts/        # English philosophical content (1 post)
+│   │   │   ├── 中文技术/         # Chinese technical articles (3 posts)
+│   │   │   └── 中文思考/         # Chinese personal reflections (3 posts)
 │   │   ├── projects/            # Project showcases
 │   │   ├── snippets/            # Code snippets collection
 │   │   ├── prompts/             # AI prompts collection
@@ -128,17 +141,19 @@ jlog-dev.github.io/
 
 ## 📊 Content Statistics
 
-### Blog Posts (16 articles)
-- **Technical Posts**: 10 articles
-  - Kafka, Spring Boot, Microservices
-  - Database optimization, System architecture
-  - Frontend development, Domain-driven design
-- **Philosophy & Thoughts**: 4 articles
-  - Personal reflections on morality and understanding
-  - Self-development and learning methodologies
-- **Chinese Content**: 6 articles
-  - Technical and philosophical posts in Chinese
-- **Mixed Languages**: Bilingual content strategy
+### Blog Posts (16 articles) - Organized by Category
+- **Technical Content**: 9 articles
+  - **Architecture**: 3 posts (DDD, Microservices, System Design)
+  - **Spring Framework**: 3 posts (Security, JPA, MessageSource)
+  - **Infrastructure**: 2 posts (Kafka SSL, AWS EKS/RDS)
+  - **Frontend**: 1 post (Learning fundamentals)
+- **Philosophical Content**: 4 articles
+  - **English Thoughts**: 1 post (Literary analysis - Greg Egan)
+  - **中文思考**: 3 posts (Personal reflections, morality, methodology)
+- **Chinese Technical Content**: 3 articles
+  - **中文技术**: Architecture patterns, data optimization, modeling strategies
+- **Content Distribution**: 56% Technical, 25% Chinese Thoughts, 19% Chinese Technical
+- **Language Balance**: 62.5% English, 37.5% Chinese
 
 ### Content Collections
 - **Project Showcases**: Technical projects with live demos and source code

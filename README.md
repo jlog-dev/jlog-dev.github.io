@@ -7,12 +7,25 @@ A modern personal website built with Astro, featuring bilingual content, multipl
 ## ✨ Features
 
 ### 📚 Content Collections
-- 📝 **Bilingual Blog** - Technical articles and personal reflections in English and Chinese
-- 🚀 **Project Showcase** - Portfolio with live demos and source code links
-- 🔧 **Code Snippets** - Reusable code examples with syntax highlighting
-- 🤖 **AI Prompts** - Curated collection of effective prompts for various AI tasks
-- 💡 **TIL (Today I Learned)** - Quick learning notes and discoveries
-- 🔖 **Bookmarks** - Curated resources with ratings and personal notes
+- **📝 Organized Blog System**: Hierarchically structured content with specialized categories:
+  - **Technical**: Architecture (DDD, Microservices), Spring Framework, Infrastructure (Kafka, AWS), Frontend
+  - **Thoughts**: Personal reflections and literary analysis in English
+  - **中文技术**: Chinese technical content focusing on architecture and data modeling
+  - **中文思考**: Chinese philosophical and personal reflections
+- **🚀 Project Showcase**: Portfolio with live demos and source code
+- **💡 Code Snippets**: Reusable code examples with syntax highlighting
+- **🤖 AI Prompts**: Curated collection of effective prompts for various tasks
+- **📚 TIL (Today I Learned)**: Quick notes and learning discoveries
+- **🔖 Bookmarks**: Curated links with personal ratings and notes
+- **🏷️ Advanced Tag System**: Cross-category tagging with technical/thoughts classification
+- **🗂️ Category Navigation**: Structured content discovery by topic and language
+- **🌍 Bilingual Support**: Content in both English and Chinese with organized structure
+- **🎨 Dark/Light Theme**: Seamless theme switching with system preference detection
+- **📱 Responsive Design**: Mobile-first approach optimized for all devices
+- **⚡ Fast Performance**: Static site generation with optimized loading
+- **🔍 SEO Optimized**: Meta tags, Open Graph, and structured data
+- **📊 Reading Time**: Estimated reading time for all articles
+- **🔗 RSS Feed**: Stay updated with automatic feed generation
 
 ### 🎨 Design & Experience
 - 🌙 **Dark Mode** - Seamless theme switching with system preference detection

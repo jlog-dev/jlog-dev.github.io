@@ -4,32 +4,135 @@ import BlogCard from "../../components/BlogCard.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const posts = await getCollection("blog");
+
+// Organize posts by category
+const categorizedPosts = {
+  technical: posts.filter(post => post.slug.startsWith('technical/')),
+  thoughts: posts.filter(post => post.slug.startsWith('thoughts/')),
+  chineseTech: posts.filter(post => post.slug.startsWith('中文技术/')),
+  chineseThoughts: posts.filter(post => post.slug.startsWith('中文思考/'))
+};
+
+// Sort each category by date
+(Object.keys(categorizedPosts) as Array<keyof typeof categorizedPosts>).forEach(key => {
+  categorizedPosts[key].sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+});
 ---
 
 <BaseLayout title="Blog">
   <h1 class="page-title">📚 Blog</h1>
-  <div style="max-width: 720px; margin: 0 auto; padding: 0 1rem">
-    {
-      posts
-        .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
-        .map((post) => (
+  
+  <div class="blog-container">
+    <!-- Technical Posts -->
+    <section class="category-section">
+      <h2 class="category-title">🔧 Technical</h2>
+      <p class="category-desc">Architecture, Spring Framework, Infrastructure & Frontend</p>
+      <div class="posts-grid">
+        {categorizedPosts.technical.map((post) => (
           <BlogCard
             title={post.data.title}
             description={post.data.description}
             date={post.data.pubDate.toDateString()}
             href={`/blog/${post.slug}`}
           />
-        ))
-    }
+        ))}
+      </div>
+    </section>
+
+    <!-- Thoughts Posts -->
+    <section class="category-section">
+      <h2 class="category-title">💭 Thoughts</h2>
+      <p class="category-desc">Personal reflections and literary analysis</p>
+      <div class="posts-grid">
+        {categorizedPosts.thoughts.map((post) => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.pubDate.toDateString()}
+            href={`/blog/${post.slug}`}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- Chinese Technical Posts -->
+    <section class="category-section">
+      <h2 class="category-title">🛠️ 中文技术</h2>
+      <p class="category-desc">架构模式、数据优化与建模策略</p>
+      <div class="posts-grid">
+        {categorizedPosts.chineseTech.map((post) => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.pubDate.toDateString()}
+            href={`/blog/${post.slug}`}
+          />
+        ))}
+      </div>
+    </section>
+
+    <!-- Chinese Thoughts Posts -->
+    <section class="category-section">
+      <h2 class="category-title">🤔 中文思考</h2>
+      <p class="category-desc">个人反思、道德思考与方法论</p>
+      <div class="posts-grid">
+        {categorizedPosts.chineseThoughts.map((post) => (
+          <BlogCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.pubDate.toDateString()}
+            href={`/blog/${post.slug}`}
+          />
+        ))}
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
 <style>
   .page-title {
     text-align: center;
-    font-size: 1.75rem;
+    font-size: var(--font-size-2xl);
     font-weight: 600;
-    margin: 2rem 0 1.5rem;
-    color: #222;
+    margin: var(--spacing-xl) 0 var(--spacing-lg);
+    color: var(--text-primary);
+  }
+
+  .blog-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+  }
+
+  .category-section {
+    margin-bottom: var(--spacing-2xl);
+  }
+
+  .category-title {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--text-primary);
+    border-bottom: 2px solid var(--color-accent);
+    padding-bottom: var(--spacing-xs);
+  }
+
+  .category-desc {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    margin-bottom: var(--spacing-lg);
+    font-style: italic;
+  }
+
+  .posts-grid {
+    display: grid;
+    gap: var(--spacing-lg);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 768px) {
+    .posts-grid {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
   }
 </style>
